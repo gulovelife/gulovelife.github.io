@@ -94,11 +94,15 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="glovelife">
-<meta property="og:url" content="http://gulovelife.github.io/index.html">
+<meta name="description" content="DFS-广度优先搜索什么是广度优先搜索广度优先搜索，就是系统的搜索整个图或者树，直到找到目标节点为止。从根节点或者起始节点开始，将根节点的所有子节点加入队列当中，然后遍历子节点并将子节点的子节点加入队列，简单的说就是一层一层的遍历，一圈一圈的遍历。 实现方式 首先将根节点放入队列中。   从队列中取出第一个节点，并检验它是否为目标。 如果找到目标，则结束搜索并回传结果。 否则将它所有尚未检验过的直">
+<meta property="og:type" content="article">
+<meta property="og:title" content="DFS">
+<meta property="og:url" content="http://gulovelife.github.io/2020/07/28/DFS/index.html">
 <meta property="og:site_name" content="glovelife">
+<meta property="og:description" content="DFS-广度优先搜索什么是广度优先搜索广度优先搜索，就是系统的搜索整个图或者树，直到找到目标节点为止。从根节点或者起始节点开始，将根节点的所有子节点加入队列当中，然后遍历子节点并将子节点的子节点加入队列，简单的说就是一层一层的遍历，一圈一圈的遍历。 实现方式 首先将根节点放入队列中。   从队列中取出第一个节点，并检验它是否为目标。 如果找到目标，则结束搜索并回传结果。 否则将它所有尚未检验过的直">
 <meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-07-28T13:47:43.786Z">
+<meta property="article:modified_time" content="2020-07-28T14:25:41.450Z">
 <meta property="article:author" content="gu">
 <meta name="twitter:card" content="summary">
 
@@ -129,13 +133,13 @@
 
 
 
-  <link rel="canonical" href="http://gulovelife.github.io/"/>
+  <link rel="canonical" href="http://gulovelife.github.io/2020/07/28/DFS/"/>
 
 
 
 
 
-  <title>glovelife</title>
+  <title>DFS | glovelife</title>
   
 
 
@@ -160,9 +164,7 @@
     
   
 
-  <div class="container sidebar-position-left 
-   page-home 
- ">
+  <div class="container sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -245,9 +247,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
 
@@ -277,9 +279,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/07/28/DFS/" itemprop="url">DFS</a></h1>
+          <h1 class="post-title" itemprop="name headline">DFS</h1>
         
 
         <div class="post-meta">
@@ -329,9 +329,7 @@
       
 
       
-        
-          
-            <h1 id="DFS-广度优先搜索"><a href="#DFS-广度优先搜索" class="headerlink" title="DFS-广度优先搜索"></a>DFS-广度优先搜索</h1><h4 id="什么是广度优先搜索"><a href="#什么是广度优先搜索" class="headerlink" title="什么是广度优先搜索"></a>什么是广度优先搜索</h4><p>广度优先搜索，就是系统的搜索整个图或者树，直到找到目标节点为止。<br>从根节点或者起始节点开始，将根节点的所有子节点加入队列当中，然后遍历子节点并将子节点的子节点加入队列，简单的说就是一层一层的遍历，一圈一圈的遍历。</p>
+        <h1 id="DFS-广度优先搜索"><a href="#DFS-广度优先搜索" class="headerlink" title="DFS-广度优先搜索"></a>DFS-广度优先搜索</h1><h4 id="什么是广度优先搜索"><a href="#什么是广度优先搜索" class="headerlink" title="什么是广度优先搜索"></a>什么是广度优先搜索</h4><p>广度优先搜索，就是系统的搜索整个图或者树，直到找到目标节点为止。<br>从根节点或者起始节点开始，将根节点的所有子节点加入队列当中，然后遍历子节点并将子节点的子节点加入队列，简单的说就是一层一层的遍历，一圈一圈的遍历。</p>
 <h4 id="实现方式"><a href="#实现方式" class="headerlink" title="实现方式"></a>实现方式</h4><ul>
 <li>首先将根节点放入队列中。  </li>
 <li>从队列中取出第一个节点，并检验它是否为目标。<ul>
@@ -346,8 +344,6 @@
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;string[]&#125;</span> <span class="variable">deadends</span></span></span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;string&#125;</span> <span class="variable">target</span></span></span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return <span class="type">&#123;number&#125;</span></span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">var</span> openLock = <span class="function"><span class="keyword">function</span>(<span class="params">deadends, target</span>) </span>&#123;</span><br><span class="line"><span class="keyword">if</span> (deadends.indexOf(<span class="string">'0000'</span>) !== <span class="number">-1</span>) <span class="keyword">return</span> <span class="number">-1</span></span><br><span class="line">    <span class="keyword">const</span> q = []</span><br><span class="line">    <span class="comment">// 一开始使用的是数组，一直超时，之后改成了集合，访问的更快点</span></span><br><span class="line">    <span class="keyword">const</span> visited = <span class="keyword">new</span> <span class="built_in">Set</span>(deadends) <span class="comment">// 将访问过的集合和deadends合并，减少判断</span></span><br><span class="line"></span><br><span class="line">    q.push(<span class="string">'0000'</span>)</span><br><span class="line">    visited.add(<span class="string">'0000'</span>)</span><br><span class="line">    <span class="keyword">let</span> path = <span class="number">0</span></span><br><span class="line">    <span class="keyword">while</span> (q.length) &#123; <span class="comment">// 确保没有循环到图的终点</span></span><br><span class="line">        <span class="keyword">const</span> size = q.length</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; size; i++) &#123; <span class="comment">// 循环当前这一层的所有节点</span></span><br><span class="line">            <span class="keyword">const</span> node = q.shift()</span><br><span class="line">            <span class="keyword">if</span> (node === target) &#123;</span><br><span class="line">                <span class="keyword">return</span> path</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">let</span> j = <span class="number">0</span>; j &lt; <span class="number">4</span>; j++) &#123; <span class="comment">// 循环该节点的子节点，这个题的子节点不太好运算</span></span><br><span class="line">                <span class="keyword">let</span> arr = node.split(<span class="string">''</span>)</span><br><span class="line">                arr[j] - <span class="number">1</span> === <span class="number">-1</span> ?</span><br><span class="line">                    arr[j] = <span class="string">'9'</span> :</span><br><span class="line">                    arr[j] = arr[j] - <span class="number">1</span></span><br><span class="line">                <span class="keyword">const</span> left = arr.join(<span class="string">''</span>)</span><br><span class="line">                <span class="keyword">if</span> (!visited.has(left)) &#123;</span><br><span class="line">                    q.push(left)</span><br><span class="line">                    visited.add(left)</span><br><span class="line">                &#125;</span><br><span class="line">                arr = node.split(<span class="string">''</span>)</span><br><span class="line">                <span class="built_in">Number</span>(arr[j]) + <span class="number">1</span> === <span class="number">10</span> ?</span><br><span class="line">                    arr[j] = <span class="string">'0'</span> :</span><br><span class="line">                    arr[j] = (+arr[j] + <span class="number">1</span>).toString()</span><br><span class="line">                <span class="keyword">const</span> right = arr.join(<span class="string">''</span>)</span><br><span class="line">                <span class="keyword">if</span> (!visited.has(right)) &#123;</span><br><span class="line">                    q.push(right)</span><br><span class="line">                    visited.add(right)</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        path++ <span class="comment">// 路径加一</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">-1</span> <span class="comment">// 循环完了都没有找到target，则返回-1</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 <p>这个代码只是A过了，没有继续优化，还有很多地方可以优化的<br>BFS解题思路比较清晰，但是提交的时候，时间复杂度和空间复杂度都很高，所以能用其他的，感觉还是用其他的比较好</p>
 
-          
-        
       
     </div>
     
@@ -364,138 +360,28 @@
       
 
       
-
-      
-
       
       
-        <div class="post-eof"></div>
+
       
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://gulovelife.github.io/2020/07/21/await&async%E5%92%8C%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="gu">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="glovelife">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/07/21/await&async%E5%92%8C%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF/" itemprop="url">await&async和事件循环</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
             
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-07-21T14:42:36+08:00">
-                2020-07-21
-              </time>
+              <a href="/2020/07/21/await&async%E5%92%8C%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF/" rel="next" title="await&async和事件循环">
+                <i class="fa fa-chevron-left"></i> await&async和事件循环
+              </a>
             
+          </div>
 
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
             
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
+          </div>
         </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
       
 
       
-        
-          
-            <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(<span class="string">'1'</span>)</span><br><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">async1</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'2'</span>)</span><br><span class="line">  <span class="keyword">await</span> <span class="string">'await的结果'</span></span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'5'</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">async1()</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'3'</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="keyword">function</span> (<span class="params">resolve</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'4'</span>)</span><br><span class="line">  resolve()</span><br><span class="line">&#125;).then(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'6'</span>)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-<p>另一个————————————–</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">async1</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'2'</span>)</span><br><span class="line">  <span class="keyword">await</span> async2()</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'7'</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">async2</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'3'</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">setTimeout(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'8'</span>)</span><br><span class="line">&#125;, <span class="number">0</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'1'</span>)</span><br><span class="line">async1()</span><br><span class="line"></span><br><span class="line"><span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="keyword">function</span> (<span class="params">resolve</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'4'</span>)</span><br><span class="line">  resolve()</span><br><span class="line">&#125;).then(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'6'</span>)</span><br><span class="line">&#125;)</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'5'</span>)</span><br></pre></td></tr></table></figure>
-
-<p><a href="https://juejin.im/post/5c148ec8e51d4576e83fd836" target="_blank" rel="noopener">https://juejin.im/post/5c148ec8e51d4576e83fd836</a></p>
-<p>自己的试验</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="params">resolve</span> =&gt;</span> &#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="params">resolve</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="number">1</span>)</span><br><span class="line">    resolve()</span><br><span class="line">  &#125;).then(<span class="function"><span class="params">()</span> =&gt;</span> <span class="built_in">console</span>.log(<span class="number">3</span>))</span><br><span class="line">  resolve()</span><br><span class="line"></span><br><span class="line">&#125;).then(<span class="function"><span class="params">()</span> =&gt;</span> <span class="built_in">console</span>.log(<span class="number">4</span>))</span><br><span class="line"></span><br><span class="line"><span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="params">resolve</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="number">2</span>)</span><br><span class="line">  resolve()</span><br><span class="line">&#125;).then(<span class="function"><span class="params">()</span> =&gt;</span> <span class="built_in">console</span>.log(<span class="number">5</span>))</span><br></pre></td></tr></table></figure>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </div>
@@ -505,142 +391,11 @@
   </article>
 
 
-    
-      
 
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://gulovelife.github.io/2020/07/19/hello-world/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="gu">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="glovelife">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/07/19/hello-world/" itemprop="url">Hello World</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-07-19T21:17:40+08:00">
-                2020-07-19
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html" target="_blank" rel="noopener">Deployment</a></p>
-
-          
-        
+    <div class="post-spread">
       
     </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
   </div>
-  
-  
-  
-  </article>
-
-
-    
-  </section>
-
-  
 
 
           </div>
@@ -648,6 +403,10 @@
 
 
           
+  <div class="comments" id="comments">
+    
+  </div>
+
 
         </div>
         
@@ -668,8 +427,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.gif"
@@ -713,6 +481,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#DFS-广度优先搜索"><span class="nav-number">1.</span> <span class="nav-text">DFS-广度优先搜索</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#什么是广度优先搜索"><span class="nav-number">1.0.0.1.</span> <span class="nav-text">什么是广度优先搜索</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#实现方式"><span class="nav-number">1.0.0.2.</span> <span class="nav-text">实现方式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#labuladong的万能公式"><span class="nav-number">1.0.0.3.</span> <span class="nav-text">labuladong的万能公式</span></a></li></ol></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -826,10 +610,10 @@
   
 
   
-    <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
 <script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
 
-  
+
 
   
 

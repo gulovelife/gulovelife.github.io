@@ -151,7 +151,7 @@
 
 
 
-</head>
+<meta name="generator" content="Hexo 4.2.1"></head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="en">
 
@@ -246,536 +246,6 @@
           <div id="content" class="content">
             
   <section id="posts" class="posts-expand">
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://gulovelife.github.io/2020/08/09/debounce/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="gu">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="glovelife">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/08/09/debounce/" itemprop="url">debounce</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-08-09T14:11:40+08:00">
-                2020-08-09
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            function debounce(func, wait, options) {
-  let timerId,
-    lastArgs,
-    lastThis,
-    lastCallTime,
-    maxWait
-
-  let trailing = true,
-    leading = false,
-    maxing = false,
-    lastInvokeTime = 0
-
-  if (isObject(options)) {
-    maxing = 'maxWait' in options
-    // 如果延迟的时间(wait)大于最大的延迟时间(maxWait)，则取延迟时间为最大延迟时间
-    maxWait = maxing ? Math.max(+options.maxWait || 0, wait) : maxWait
-    leading = !!options.leading
-    trailing = 'trailing' in options ? !!options.trailing : trailing
-  }
-
-  // 判断是否是object
-  function isObject(value) {
-    const type = typeof value
-    return value != null && (type === 'object' || type === 'function')
-  }
-
-  // 出发函数 func
-  function invokeFunction(time) {
-    const args = lastArgs
-    const that = lastThis
-    lastInvokeTime = time
-    lastArgs = lastThis = undefined
-    func.apply(that, args)
-  }
-
-  // 定时器到期后的执行函数
-  function timeExpired() {
-    const time = Date.now()
-    if (canInvoke(time)) {
-      return trailingEdge(time)
-    }
-    timerId = startTimer(remainingWait(time))
-  }
-
-  // 计算真正的应该设置延迟的时间
-  function remainingWait(time) {
-    const timeSinceLastCall = time - lastCallTime // 距离上次调用的时间
-    const timeSinceLastInvoke = time - lastInvokeTime // 距离上次触发的时间
-    const timeWaiting = wait - timeSinceLastCall // 调整后的需要等待的时间
-
-    return maxing ? Math.min(timeWaiting, maxWait - timeSinceLastInvoke) : timeWaiting
-  }
-
-  // 是否能够触发函数
-  function canInvoke(time) {
-    const timeSinceLastCall = time - lastCallTime
-    const timeSinceLastInvoke = time - lastInvokeTime
-    return (
-      lastCallTime === undefined || // 第一次触发
-      timeSinceLastCall >= wait || // 时间到了
-      timeSinceLastCall < 0 || // 系统时间被改了
-      (maxing && timeSinceLastInvoke >= maxWait) // 有最大触发时间，而且距离上次触发的时间大于maxWait
-    )
-  }
-
-  // 设置定时器的函数
-  function startTimer(time) {
-    return setTimeout(timeExpired, time)
-  }
-
-  // 后置触发的方法
-  function trailingEdge(time) {
-    timerId = undefined
-    // 这里引用其他人的解释，目前我不是很清楚
-    // 只有当事件至少发生过一次且配置了末端触发才调用真正的事件处理事件，
-    // 意思是如果程序设置了末端触发，且没有设置最大等待时间
-    // 但是时间自始至终只触发了一次，则真正的事件处理程序永远不会执行
-    if (trailing && lastArgs) {
-      invokeFunction(time)
-    }
-    lastThis = lastArgs = undefined
-  }
-
-  // 前置触发的方法
-  function leadingEdge(time) {
-    lastInvokeTime = time
-    timerId = startTimer(wait)
-    leading ? invokeFunction(time) : null
-  }
-
-  // 要返回的debounce函数
-  function debounced(...arg) {
-    const time = Date.now()
-    const isInvoking = canInvoke(time)
-
-    lastArgs = arg
-    lastThis = this
-    lastCallTime = time
-
-    if (isInvoking) {
-      if (timerId === undefined) {
-        return leadingEdge(lastCallTime)
-      }
-      if (maxing) {
-        timerId = startTimer(wait)
-        return invokeFunction(lastCallTime)
-      }
-    }
-    // 负责一种情况，如果后置触发，已经触发过一次了，
-    // 然后timerId被设置成undefined，在wait时间内触发的时候，我们需要再次初始化一次计时器
-    if (timerId === undefined) {
-      timerId = startTimer(wait)
-    }
-  }
-  return debounced
-}
-
-
-function lodashDebounce(func, wait, options) {
-  let lastArgs,
-    lastThis,
-    maxWait,
-    result,
-    timerId,
-    lastCallTime
-
-  let lastInvokeTime = 0
-  let leading = false
-  let maxing = false
-  let trailing = true
-
-  // Bypass `requestAnimationFrame` by explicitly setting `wait=0`.
-  // const useRAF = (!wait && wait !== 0 && typeof root.requestAnimationFrame === 'function')
-
-  function isObject(value) {
-    const type = typeof value
-    return value != null && (type === 'object' || type === 'function')
-  }
-
-  if (typeof func !== 'function') {
-    throw new TypeError('Expected a function')
-  }
-  wait = +wait || 0
-  if (isObject(options)) {
-    leading = !!options.leading
-    maxing = 'maxWait' in options
-    maxWait = maxing ? Math.max(+options.maxWait || 0, wait) : maxWait
-    trailing = 'trailing' in options ? !!options.trailing : trailing
-  }
-
-  function invokeFunc(time) {
-    const args = lastArgs
-    const thisArg = lastThis
-
-    lastArgs = lastThis = undefined
-    lastInvokeTime = time
-    result = func.apply(thisArg, args)
-    return result
-  }
-
-  function startTimer(pendingFunc, wait) {
-    // if (useRAF) {
-    //   root.cancelAnimationFrame(timerId)
-    //   return root.requestAnimationFrame(pendingFunc)
-    // }
-    return setTimeout(pendingFunc, wait)
-  }
-
-  function cancelTimer(id) {
-    // if (useRAF) {
-    //   return root.cancelAnimationFrame(id)
-    // }
-    clearTimeout(id)
-  }
-
-  function leadingEdge(time) {
-    // Reset any `maxWait` timer.
-    lastInvokeTime = time
-    // Start the timer for the trailing edge.
-    timerId = startTimer(timerExpired, wait)
-    // Invoke the leading edge.
-    return leading ? invokeFunc(time) : result
-  }
-
-  function remainingWait(time) {
-    const timeSinceLastCall = time - lastCallTime
-    const timeSinceLastInvoke = time - lastInvokeTime
-    const timeWaiting = wait - timeSinceLastCall
-
-    return maxing
-      ? Math.min(timeWaiting, maxWait - timeSinceLastInvoke)
-      : timeWaiting
-  }
-
-  function shouldInvoke(time) {
-    const timeSinceLastCall = time - lastCallTime
-    const timeSinceLastInvoke = time - lastInvokeTime
-
-    // Either this is the first call, activity has stopped and we're at the
-    // trailing edge, the system time has gone backwards and we're treating
-    // it as the trailing edge, or we've hit the `maxWait` limit.
-    return (lastCallTime === undefined || (timeSinceLastCall >= wait) ||
-      (timeSinceLastCall < 0) || (maxing && timeSinceLastInvoke >= maxWait))
-  }
-
-  function timerExpired() {
-    const time = Date.now()
-    if (shouldInvoke(time)) {
-      return trailingEdge(time)
-    }
-    // Restart the timer.
-    timerId = startTimer(timerExpired, remainingWait(time))
-  }
-
-  function trailingEdge(time) {
-    timerId = undefined
-
-    // Only invoke if we have `lastArgs` which means `func` has been
-    // debounced at least once.
-    if (trailing && lastArgs) {
-      return invokeFunc(time)
-    }
-    lastArgs = lastThis = undefined
-    return result
-  }
-
-  function cancel() {
-    if (timerId !== undefined) {
-      cancelTimer(timerId)
-    }
-    lastInvokeTime = 0
-    lastArgs = lastCallTime = lastThis = timerId = undefined
-  }
-
-  function flush() {
-    return timerId === undefined ? result : trailingEdge(Date.now())
-  }
-
-  function pending() {
-    return timerId !== undefined
-  }
-
-  function debounced(...args) {
-    const time = Date.now()
-    const isInvoking = shouldInvoke(time)
-
-    lastArgs = args
-    lastThis = this
-    lastCallTime = time
-
-    if (isInvoking) {
-      if (timerId === undefined) {
-        return leadingEdge(lastCallTime)
-      }
-      if (maxing) {
-        // Handle invocations in a tight loop.
-        timerId = startTimer(timerExpired, wait)
-        return invokeFunc(lastCallTime)
-      }
-    }
-    if (timerId === undefined) {
-      timerId = startTimer(timerExpired, wait)
-    }
-    return result
-  }
-  debounced.cancel = cancel
-  debounced.flush = flush
-  debounced.pending = pending
-  return debounced
-}
-
-
-const d = debounce(e => {
-  console.log(e.target.value);
-}, 500, {
-  leading: false,
-  maxWait: 1000
-})
-
-var input = document.getElementById('input')
-input.addEventListener('input', d)
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://gulovelife.github.io/2020/08/09/index/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="gu">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="glovelife">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/08/09/index/" itemprop="url">index</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-08-09T13:54:38+08:00">
-                2020-08-09
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-<meta name="generator" content="Hexo 4.2.1"></head>
-<body>
-  <input type="text" id="input"></input>
-  <script src="./debounce.js">
-  </script>
-</body>
-</html>
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
     
       
 
@@ -1017,35 +487,36 @@ input.addEventListener('input', d)
 <li>首先我们需要定义一个变量来缓存上次触发debounce时的时间</li>
 <li>然后我们取当前的时间和这个时间进行对比，然后再和等待时间wait对比</li>
 <li>这次我们修改一下timerId定义和处理的方式</li>
-<li>加入canInvoke函数，来判断应该重置timerId还是触发函数<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">debounce</span>(<span class="params">func, wait</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> timerId,</span><br><span class="line">    lastArgs,</span><br><span class="line">    lastThis,</span><br><span class="line">    lastCallTime</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 出发函数 func</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">invokeFunction</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    timerId = <span class="literal">undefined</span></span><br><span class="line">    func.apply(lastThis, lastArgs)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 定时器到期后的执行函数</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">timeExpired</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> time = <span class="built_in">Date</span>.now()</span><br><span class="line">    <span class="keyword">if</span> (canInvoke(time)) &#123;</span><br><span class="line">      <span class="keyword">return</span> invokeFunction()</span><br><span class="line">    &#125;</span><br><span class="line">    timerId = startTimer(remainingWait(time))</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 计算真正的应该设置延迟的时间</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">remainingWait</span>(<span class="params">time</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> timeSinceLastCall = time - lastCallTime</span><br><span class="line">    <span class="keyword">const</span> timeWaiting = wait - timeSinceLastCall</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> timeWaiting</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 是否能够触发函数</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">canInvoke</span>(<span class="params">time</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> timeSinceLastCall = time - lastCallTime</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      lastCallTime === <span class="literal">undefined</span> || <span class="comment">// 第一次触发</span></span><br><span class="line">      timeSinceLastCall &gt;= wait || <span class="comment">// 时间到了</span></span><br><span class="line">      timeSinceLastCall &lt; <span class="number">0</span> <span class="comment">// 系统时间被改了</span></span><br><span class="line">    )</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 设置定时器的函数</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">startTimer</span>(<span class="params">time</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> setTimeout(timeExpired, time)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 要返回的debounce函数</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">debounced</span>(<span class="params">...arg</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> time = <span class="built_in">Date</span>.now()</span><br><span class="line"></span><br><span class="line">    lastArgs = arg</span><br><span class="line">    lastThis = <span class="keyword">this</span></span><br><span class="line">    lastCallTime = time</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (timerId === <span class="literal">undefined</span>) &#123;</span><br><span class="line">      timerId = startTimer(wait)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> debounced</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-</li>
+<li>加入canInvoke函数，来判断应该重置timerId还是触发函数  </li>
 </ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">debounce</span>(<span class="params">func, wait</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> timerId,</span><br><span class="line">    lastArgs,</span><br><span class="line">    lastThis,</span><br><span class="line">    lastCallTime</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 出发函数 func</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">invokeFunction</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    timerId = <span class="literal">undefined</span></span><br><span class="line">    func.apply(lastThis, lastArgs)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 定时器到期后的执行函数</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">timeExpired</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> time = <span class="built_in">Date</span>.now()</span><br><span class="line">    <span class="keyword">if</span> (canInvoke(time)) &#123;</span><br><span class="line">      <span class="keyword">return</span> invokeFunction()</span><br><span class="line">    &#125;</span><br><span class="line">    timerId = startTimer(remainingWait(time))</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 计算真正的应该设置延迟的时间</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">remainingWait</span>(<span class="params">time</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> timeSinceLastCall = time - lastCallTime</span><br><span class="line">    <span class="keyword">const</span> timeWaiting = wait - timeSinceLastCall</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> timeWaiting</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 是否能够触发函数</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">canInvoke</span>(<span class="params">time</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> timeSinceLastCall = time - lastCallTime</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      lastCallTime === <span class="literal">undefined</span> || <span class="comment">// 第一次触发</span></span><br><span class="line">      timeSinceLastCall &gt;= wait || <span class="comment">// 时间到了</span></span><br><span class="line">      timeSinceLastCall &lt; <span class="number">0</span> <span class="comment">// 系统时间被改了</span></span><br><span class="line">    )</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 设置定时器的函数</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">startTimer</span>(<span class="params">time</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> setTimeout(timeExpired, time)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 要返回的debounce函数</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">debounced</span>(<span class="params">...arg</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> time = <span class="built_in">Date</span>.now()</span><br><span class="line"></span><br><span class="line">    lastArgs = arg</span><br><span class="line">    lastThis = <span class="keyword">this</span></span><br><span class="line">    lastCallTime = time</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (timerId === <span class="literal">undefined</span>) &#123;</span><br><span class="line">      timerId = startTimer(wait)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> debounced</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <h3 id="第三步-加入trailing参数和trailingEdge函数"><a href="#第三步-加入trailing参数和trailingEdge函数" class="headerlink" title="第三步-加入trailing参数和trailingEdge函数"></a>第三步-加入trailing参数和trailingEdge函数</h3><p>防抖有两种触发方式，一种是前置触发，一种是后置触发。后置触发就是正常的在高频操作之后几秒后进行触发。前置触发就是在我们第一次触发这个操作的时间就触发一次这个函数。我们可以加入两个参数来控制前置还是后置。前置为leading，后置为trailing。  </p>
 <ul>
 <li>首先我们要定义一个trailing变量，并初始化为true，因为默认的都是后置。</li>
 <li>参数中加一个options，里面定义trailing，然后我们需要对其进行校验</li>
 <li>添加一个trailingEdge函数</li>
-<li>更改调用方式，不调用原来的invokeFunction，而是调用trailingEdge函数<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">debounce</span>(<span class="params">func, wait, options</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> timerId,</span><br><span class="line">    lastArgs,</span><br><span class="line">    lastThis,</span><br><span class="line">    lastCallTime</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">let</span> trailing = <span class="literal">true</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span>(isObject(options)) &#123;</span><br><span class="line">    trailing = <span class="string">'trailing'</span> <span class="keyword">in</span> options ? !!options.trailing : trailing</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 判断是否是object</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">isObject</span>(<span class="params">value</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> type = <span class="keyword">typeof</span> value</span><br><span class="line">    <span class="keyword">return</span> value != <span class="literal">null</span> &amp;&amp; (type === <span class="string">'object'</span> || type === <span class="string">'function'</span>)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 出发函数 func</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">invokeFunction</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    func.apply(lastThis, lastArgs)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 定时器到期后的执行函数</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">timeExpired</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> time = <span class="built_in">Date</span>.now()</span><br><span class="line">    <span class="keyword">if</span> (canInvoke(time)) &#123;</span><br><span class="line">      <span class="keyword">return</span> trailingEdge()</span><br><span class="line">    &#125;</span><br><span class="line">    timerId = startTimer(remainingWait(time))</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 计算真正的应该设置延迟的时间</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">remainingWait</span>(<span class="params">time</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> timeSinceLastCall = time - lastCallTime</span><br><span class="line">    <span class="keyword">const</span> timeWaiting = wait - timeSinceLastCall</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> timeWaiting</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 是否能够触发函数</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">canInvoke</span>(<span class="params">time</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> timeSinceLastCall = time - lastCallTime</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      lastCallTime === <span class="literal">undefined</span> || <span class="comment">// 第一次触发</span></span><br><span class="line">      timeSinceLastCall &gt;= wait || <span class="comment">// 时间到了</span></span><br><span class="line">      timeSinceLastCall &lt; <span class="number">0</span> <span class="comment">// 系统时间被改了</span></span><br><span class="line">    )</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 设置定时器的函数</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">startTimer</span>(<span class="params">time</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> setTimeout(timeExpired, time)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 后置触发的方法</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">trailingEdge</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    timerId = <span class="literal">undefined</span></span><br><span class="line">    <span class="comment">// 这里引用其他人的解释，目前我不是很清楚</span></span><br><span class="line">    <span class="comment">// 只有当事件至少发生过一次且配置了末端触发才调用真正的事件处理事件，</span></span><br><span class="line">    <span class="comment">// 意思是如果程序设置了末端触发，且没有设置最大等待时间</span></span><br><span class="line">    <span class="comment">// 但是时间自始至终只触发了一次，则真正的事件处理程序永远不会执行</span></span><br><span class="line">    <span class="keyword">if</span> (trailing &amp;&amp; lastArgs) &#123;</span><br><span class="line">      invokeFunction()</span><br><span class="line">    &#125;</span><br><span class="line">    lastThis = lastArgs = <span class="literal">undefined</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 要返回的debounce函数</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">debounced</span>(<span class="params">...arg</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> time = <span class="built_in">Date</span>.now()</span><br><span class="line"></span><br><span class="line">    lastArgs = arg</span><br><span class="line">    lastThis = <span class="keyword">this</span></span><br><span class="line">    lastCallTime = time</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (timerId === <span class="literal">undefined</span>) &#123;</span><br><span class="line">      timerId = startTimer(wait)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> debounced</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-</li>
+<li>更改调用方式，不调用原来的invokeFunction，而是调用trailingEdge函数  </li>
 </ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">debounce</span>(<span class="params">func, wait, options</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> timerId,</span><br><span class="line">    lastArgs,</span><br><span class="line">    lastThis,</span><br><span class="line">    lastCallTime</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">let</span> trailing = <span class="literal">true</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span>(isObject(options)) &#123;</span><br><span class="line">    trailing = <span class="string">'trailing'</span> <span class="keyword">in</span> options ? !!options.trailing : trailing</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 判断是否是object</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">isObject</span>(<span class="params">value</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> type = <span class="keyword">typeof</span> value</span><br><span class="line">    <span class="keyword">return</span> value != <span class="literal">null</span> &amp;&amp; (type === <span class="string">'object'</span> || type === <span class="string">'function'</span>)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 出发函数 func</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">invokeFunction</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    func.apply(lastThis, lastArgs)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 定时器到期后的执行函数</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">timeExpired</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> time = <span class="built_in">Date</span>.now()</span><br><span class="line">    <span class="keyword">if</span> (canInvoke(time)) &#123;</span><br><span class="line">      <span class="keyword">return</span> trailingEdge()</span><br><span class="line">    &#125;</span><br><span class="line">    timerId = startTimer(remainingWait(time))</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 计算真正的应该设置延迟的时间</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">remainingWait</span>(<span class="params">time</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> timeSinceLastCall = time - lastCallTime</span><br><span class="line">    <span class="keyword">const</span> timeWaiting = wait - timeSinceLastCall</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> timeWaiting</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 是否能够触发函数</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">canInvoke</span>(<span class="params">time</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> timeSinceLastCall = time - lastCallTime</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      lastCallTime === <span class="literal">undefined</span> || <span class="comment">// 第一次触发</span></span><br><span class="line">      timeSinceLastCall &gt;= wait || <span class="comment">// 时间到了</span></span><br><span class="line">      timeSinceLastCall &lt; <span class="number">0</span> <span class="comment">// 系统时间被改了</span></span><br><span class="line">    )</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 设置定时器的函数</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">startTimer</span>(<span class="params">time</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> setTimeout(timeExpired, time)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 后置触发的方法</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">trailingEdge</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    timerId = <span class="literal">undefined</span></span><br><span class="line">    <span class="comment">// 这里引用其他人的解释，目前我不是很清楚</span></span><br><span class="line">    <span class="comment">// 只有当事件至少发生过一次且配置了末端触发才调用真正的事件处理事件，</span></span><br><span class="line">    <span class="comment">// 意思是如果程序设置了末端触发，且没有设置最大等待时间</span></span><br><span class="line">    <span class="comment">// 但是时间自始至终只触发了一次，则真正的事件处理程序永远不会执行</span></span><br><span class="line">    <span class="keyword">if</span> (trailing &amp;&amp; lastArgs) &#123;</span><br><span class="line">      invokeFunction()</span><br><span class="line">    &#125;</span><br><span class="line">    lastThis = lastArgs = <span class="literal">undefined</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 要返回的debounce函数</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">debounced</span>(<span class="params">...arg</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> time = <span class="built_in">Date</span>.now()</span><br><span class="line"></span><br><span class="line">    lastArgs = arg</span><br><span class="line">    lastThis = <span class="keyword">this</span></span><br><span class="line">    lastCallTime = time</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (timerId === <span class="literal">undefined</span>) &#123;</span><br><span class="line">      timerId = startTimer(wait)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> debounced</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <h3 id="第四步-加入leading参数和leadingEdge函数"><a href="#第四步-加入leading参数和leadingEdge函数" class="headerlink" title="第四步-加入leading参数和leadingEdge函数"></a>第四步-加入leading参数和leadingEdge函数</h3><p>leading是指前置触发，也就是说，一开始触发debounce就要触发</p>
 <ul>
 <li>首先定义一个leading变量，初始化为false</li>
 <li>在options里面加入leading，并赋值</li>
-<li>添加leadingEdge函数，并在最开始调用，leadingEdge函数中要判断是否要立即调用函数，并初始化定时器<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">debounce</span>(<span class="params">func, wait, options</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> timerId,</span><br><span class="line">    lastArgs,</span><br><span class="line">    lastThis,</span><br><span class="line">    lastCallTime</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">let</span> trailing = <span class="literal">true</span>,</span><br><span class="line">    leading = <span class="literal">false</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span>(isObject(options)) &#123;</span><br><span class="line">    leading = !!options.leading</span><br><span class="line">    trailing = <span class="string">'trailing'</span> <span class="keyword">in</span> options ? !!options.trailing : trailing</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 判断是否是object</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">isObject</span>(<span class="params">value</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> type = <span class="keyword">typeof</span> value</span><br><span class="line">    <span class="keyword">return</span> value != <span class="literal">null</span> &amp;&amp; (type === <span class="string">'object'</span> || type === <span class="string">'function'</span>)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 出发函数 func</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">invokeFunction</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    func.apply(lastThis, lastArgs)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 定时器到期后的执行函数</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">timeExpired</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> time = <span class="built_in">Date</span>.now()</span><br><span class="line">    <span class="keyword">if</span> (canInvoke(time)) &#123;</span><br><span class="line">      <span class="keyword">return</span> trailingEdge()</span><br><span class="line">    &#125;</span><br><span class="line">    timerId = startTimer(remainingWait(time))</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 计算真正的应该设置延迟的时间</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">remainingWait</span>(<span class="params">time</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> timeSinceLastCall = time - lastCallTime</span><br><span class="line">    <span class="keyword">const</span> timeWaiting = wait - timeSinceLastCall</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> timeWaiting</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 是否能够触发函数</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">canInvoke</span>(<span class="params">time</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> timeSinceLastCall = time - lastCallTime</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      lastCallTime === <span class="literal">undefined</span> || <span class="comment">// 第一次触发</span></span><br><span class="line">      timeSinceLastCall &gt;= wait || <span class="comment">// 时间到了</span></span><br><span class="line">      timeSinceLastCall &lt; <span class="number">0</span> <span class="comment">// 系统时间被改了</span></span><br><span class="line">    )</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 设置定时器的函数</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">startTimer</span>(<span class="params">time</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> setTimeout(timeExpired, time)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 后置触发的方法</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">trailingEdge</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    timerId = <span class="literal">undefined</span></span><br><span class="line">    <span class="comment">// 这里引用其他人的解释，目前我不是很清楚</span></span><br><span class="line">    <span class="comment">// 只有当事件至少发生过一次且配置了末端触发才调用真正的事件处理事件，</span></span><br><span class="line">    <span class="comment">// 意思是如果程序设置了末端触发，且没有设置最大等待时间</span></span><br><span class="line">    <span class="comment">// 但是时间自始至终只触发了一次，则真正的事件处理程序永远不会执行</span></span><br><span class="line">    <span class="keyword">if</span> (trailing &amp;&amp; lastArgs) &#123;</span><br><span class="line">      invokeFunction()</span><br><span class="line">    &#125;</span><br><span class="line">    lastThis = lastArgs = <span class="literal">undefined</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 前置触发的方法</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">leadingEdge</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    timerId = startTimer(wait)</span><br><span class="line">    leading &amp;&amp; invokeFunction()</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 要返回的debounce函数</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">debounced</span>(<span class="params">...arg</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> time = <span class="built_in">Date</span>.now()</span><br><span class="line">    <span class="keyword">const</span> isInvoking = canInvoke(time)</span><br><span class="line"></span><br><span class="line">    lastArgs = arg</span><br><span class="line">    lastThis = <span class="keyword">this</span></span><br><span class="line">    lastCallTime = time</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (isInvoking) &#123;</span><br><span class="line">      <span class="keyword">if</span> (timerId === <span class="literal">undefined</span>) &#123;</span><br><span class="line">        leadingEdge()</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 负责一种情况，如果后置触发，已经触发过一次了，</span></span><br><span class="line">    <span class="comment">// 然后timerId被设置成undefined，在wait时间内触发的时候，我们需要再次初始化一次计时器</span></span><br><span class="line">    <span class="keyword">if</span> (timerId === <span class="literal">undefined</span>) &#123;</span><br><span class="line">      timerId = startTimer(wait)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> debounced</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-</li>
+<li>添加leadingEdge函数，并在最开始调用，leadingEdge函数中要判断是否要立即调用函数，并初始化定时器  </li>
 </ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">debounce</span>(<span class="params">func, wait, options</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> timerId,</span><br><span class="line">    lastArgs,</span><br><span class="line">    lastThis,</span><br><span class="line">    lastCallTime</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">let</span> trailing = <span class="literal">true</span>,</span><br><span class="line">    leading = <span class="literal">false</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span>(isObject(options)) &#123;</span><br><span class="line">    leading = !!options.leading</span><br><span class="line">    trailing = <span class="string">'trailing'</span> <span class="keyword">in</span> options ? !!options.trailing : trailing</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 判断是否是object</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">isObject</span>(<span class="params">value</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> type = <span class="keyword">typeof</span> value</span><br><span class="line">    <span class="keyword">return</span> value != <span class="literal">null</span> &amp;&amp; (type === <span class="string">'object'</span> || type === <span class="string">'function'</span>)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 出发函数 func</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">invokeFunction</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    func.apply(lastThis, lastArgs)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 定时器到期后的执行函数</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">timeExpired</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> time = <span class="built_in">Date</span>.now()</span><br><span class="line">    <span class="keyword">if</span> (canInvoke(time)) &#123;</span><br><span class="line">      <span class="keyword">return</span> trailingEdge()</span><br><span class="line">    &#125;</span><br><span class="line">    timerId = startTimer(remainingWait(time))</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 计算真正的应该设置延迟的时间</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">remainingWait</span>(<span class="params">time</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> timeSinceLastCall = time - lastCallTime</span><br><span class="line">    <span class="keyword">const</span> timeWaiting = wait - timeSinceLastCall</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> timeWaiting</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 是否能够触发函数</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">canInvoke</span>(<span class="params">time</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> timeSinceLastCall = time - lastCallTime</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      lastCallTime === <span class="literal">undefined</span> || <span class="comment">// 第一次触发</span></span><br><span class="line">      timeSinceLastCall &gt;= wait || <span class="comment">// 时间到了</span></span><br><span class="line">      timeSinceLastCall &lt; <span class="number">0</span> <span class="comment">// 系统时间被改了</span></span><br><span class="line">    )</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 设置定时器的函数</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">startTimer</span>(<span class="params">time</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> setTimeout(timeExpired, time)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 后置触发的方法</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">trailingEdge</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    timerId = <span class="literal">undefined</span></span><br><span class="line">    <span class="comment">// 这里引用其他人的解释，目前我不是很清楚</span></span><br><span class="line">    <span class="comment">// 只有当事件至少发生过一次且配置了末端触发才调用真正的事件处理事件，</span></span><br><span class="line">    <span class="comment">// 意思是如果程序设置了末端触发，且没有设置最大等待时间</span></span><br><span class="line">    <span class="comment">// 但是时间自始至终只触发了一次，则真正的事件处理程序永远不会执行</span></span><br><span class="line">    <span class="keyword">if</span> (trailing &amp;&amp; lastArgs) &#123;</span><br><span class="line">      invokeFunction()</span><br><span class="line">    &#125;</span><br><span class="line">    lastThis = lastArgs = <span class="literal">undefined</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 前置触发的方法</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">leadingEdge</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    timerId = startTimer(wait)</span><br><span class="line">    leading &amp;&amp; invokeFunction()</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 要返回的debounce函数</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">debounced</span>(<span class="params">...arg</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> time = <span class="built_in">Date</span>.now()</span><br><span class="line">    <span class="keyword">const</span> isInvoking = canInvoke(time)</span><br><span class="line"></span><br><span class="line">    lastArgs = arg</span><br><span class="line">    lastThis = <span class="keyword">this</span></span><br><span class="line">    lastCallTime = time</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (isInvoking) &#123;</span><br><span class="line">      <span class="keyword">if</span> (timerId === <span class="literal">undefined</span>) &#123;</span><br><span class="line">        leadingEdge()</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 负责一种情况，如果后置触发，已经触发过一次了，</span></span><br><span class="line">    <span class="comment">// 然后timerId被设置成undefined，在wait时间内触发的时候，我们需要再次初始化一次计时器</span></span><br><span class="line">    <span class="keyword">if</span> (timerId === <span class="literal">undefined</span>) &#123;</span><br><span class="line">      timerId = startTimer(wait)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> debounced</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 <h3 id="第五步-加入maxWait"><a href="#第五步-加入maxWait" class="headerlink" title="第五步-加入maxWait"></a>第五步-加入maxWait</h3><p>maxWait的意思是，经过maxWait时间后，事件如果还没触发，则必须触发一次<br>如何实现呢，lodash是在remainingWait上面做文章，如果有这个maxWait，则会看看距离最近的一次触发的时间，和maxWait哪个长，如果到了maxWait的时间了，则触发。</p>
 <ul>
 <li>首先需要加入一个lastInvokeTime变量，来记录最后一次调用的时间</li>
 <li>然后加入maxWait参数</li>
 <li>更改remainingWait函数和canInvoke函数，兼容这种情况</li>
-<li>修改debounced函数，在可以触发的时候，如果是因为maxWait的原因，重置定时器，触发函数<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">debounce</span>(<span class="params">func, wait, options</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> timerId,</span><br><span class="line">    lastArgs,</span><br><span class="line">    lastThis,</span><br><span class="line">    lastCallTime,</span><br><span class="line">    maxWait</span><br><span class="line"></span><br><span class="line">  <span class="keyword">let</span> trailing = <span class="literal">true</span>,</span><br><span class="line">    leading = <span class="literal">false</span>,</span><br><span class="line">    maxing = <span class="literal">false</span>,</span><br><span class="line">    lastInvokeTime = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (isObject(options)) &#123;</span><br><span class="line">    maxing = <span class="string">'maxWait'</span> <span class="keyword">in</span> options</span><br><span class="line">    <span class="comment">// 如果延迟的时间(wait)大于最大的延迟时间(maxWait)，则取延迟时间为最大延迟时间</span></span><br><span class="line">    maxWait = maxing ? <span class="built_in">Math</span>.max(+options.maxWait || <span class="number">0</span>, wait) : maxWait</span><br><span class="line">    leading = !!options.leading</span><br><span class="line">    trailing = <span class="string">'trailing'</span> <span class="keyword">in</span> options ? !!options.trailing : trailing</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 判断是否是object</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">isObject</span>(<span class="params">value</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> type = <span class="keyword">typeof</span> value</span><br><span class="line">    <span class="keyword">return</span> value != <span class="literal">null</span> &amp;&amp; (type === <span class="string">'object'</span> || type === <span class="string">'function'</span>)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 出发函数 func</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">invokeFunction</span>(<span class="params">time</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> args = lastArgs</span><br><span class="line">    <span class="keyword">const</span> that = lastThis</span><br><span class="line">    lastInvokeTime = time</span><br><span class="line">    lastArgs = lastThis = <span class="literal">undefined</span></span><br><span class="line">    func.apply(that, args)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 定时器到期后的执行函数</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">timeExpired</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> time = <span class="built_in">Date</span>.now()</span><br><span class="line">    <span class="keyword">if</span> (canInvoke(time)) &#123;</span><br><span class="line">      <span class="keyword">return</span> trailingEdge(time)</span><br><span class="line">    &#125;</span><br><span class="line">    timerId = startTimer(remainingWait(time))</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 计算真正的应该设置延迟的时间</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">remainingWait</span>(<span class="params">time</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> timeSinceLastCall = time - lastCallTime <span class="comment">// 距离上次调用的时间</span></span><br><span class="line">    <span class="keyword">const</span> timeSinceLastInvoke = time - lastInvokeTime <span class="comment">// 距离上次触发的时间</span></span><br><span class="line">    <span class="keyword">const</span> timeWaiting = wait - timeSinceLastCall <span class="comment">// 调整后的需要等待的时间</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> maxing ? <span class="built_in">Math</span>.min(timeWaiting, maxWait - timeSinceLastInvoke) : timeWaiting</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 是否能够触发函数</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">canInvoke</span>(<span class="params">time</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> timeSinceLastCall = time - lastCallTime</span><br><span class="line">    <span class="keyword">const</span> timeSinceLastInvoke = time - lastInvokeTime</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      lastCallTime === <span class="literal">undefined</span> || <span class="comment">// 第一次触发</span></span><br><span class="line">      timeSinceLastCall &gt;= wait || <span class="comment">// 时间到了</span></span><br><span class="line">      timeSinceLastCall &lt; <span class="number">0</span> || <span class="comment">// 系统时间被改了</span></span><br><span class="line">      (maxing &amp;&amp; timeSinceLastInvoke &gt;= maxWait) <span class="comment">// 有最大触发时间，而且距离上次触发的时间大于maxWait</span></span><br><span class="line">    )</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 设置定时器的函数</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">startTimer</span>(<span class="params">time</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> setTimeout(timeExpired, time)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 后置触发的方法</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">trailingEdge</span>(<span class="params">time</span>) </span>&#123;</span><br><span class="line">    timerId = <span class="literal">undefined</span></span><br><span class="line">    <span class="comment">// 这里引用其他人的解释，目前我不是很清楚</span></span><br><span class="line">    <span class="comment">// 只有当事件至少发生过一次且配置了末端触发才调用真正的事件处理事件，</span></span><br><span class="line">    <span class="comment">// 意思是如果程序设置了末端触发，且没有设置最大等待时间</span></span><br><span class="line">    <span class="comment">// 但是时间自始至终只触发了一次，则真正的事件处理程序永远不会执行</span></span><br><span class="line">    <span class="keyword">if</span> (trailing &amp;&amp; lastArgs) &#123;</span><br><span class="line">      invokeFunction(time)</span><br><span class="line">    &#125;</span><br><span class="line">    lastThis = lastArgs = <span class="literal">undefined</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 前置触发的方法</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">leadingEdge</span>(<span class="params">time</span>) </span>&#123;</span><br><span class="line">    lastInvokeTime = time <span class="comment">// 重置最近一次触发时间</span></span><br><span class="line">    timerId = startTimer(wait)</span><br><span class="line">    leading ? invokeFunction(time) : <span class="literal">null</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 要返回的debounce函数</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">debounced</span>(<span class="params">...arg</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> time = <span class="built_in">Date</span>.now()</span><br><span class="line">    <span class="keyword">const</span> isInvoking = canInvoke(time)</span><br><span class="line"></span><br><span class="line">    lastArgs = arg</span><br><span class="line">    lastThis = <span class="keyword">this</span></span><br><span class="line">    lastCallTime = time</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (isInvoking) &#123;</span><br><span class="line">      <span class="keyword">if</span> (timerId === <span class="literal">undefined</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> leadingEdge(lastCallTime)</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">if</span> (maxing) &#123;</span><br><span class="line">        timerId = startTimer(wait)</span><br><span class="line">        <span class="keyword">return</span> invokeFunction(lastCallTime)</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 负责一种情况，如果后置触发，已经触发过一次了，</span></span><br><span class="line">    <span class="comment">// 然后timerId被设置成undefined，在wait时间内触发的时候，我们需要再次初始化一次计时器</span></span><br><span class="line">    <span class="keyword">if</span> (timerId === <span class="literal">undefined</span>) &#123;</span><br><span class="line">      timerId = startTimer(wait)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> debounced</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-这样基本上就是把lodash的防抖函数都扒的差不多了，除了一些取消和立即执行的函数，和一些其他附加的东西，这些之后再补充，不过也不是特别重要</li>
+<li>修改debounced函数，在可以触发的时候，如果是因为maxWait的原因，重置定时器，触发函数  </li>
 </ul>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">debounce</span>(<span class="params">func, wait, options</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> timerId,</span><br><span class="line">    lastArgs,</span><br><span class="line">    lastThis,</span><br><span class="line">    lastCallTime,</span><br><span class="line">    maxWait</span><br><span class="line"></span><br><span class="line">  <span class="keyword">let</span> trailing = <span class="literal">true</span>,</span><br><span class="line">    leading = <span class="literal">false</span>,</span><br><span class="line">    maxing = <span class="literal">false</span>,</span><br><span class="line">    lastInvokeTime = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (isObject(options)) &#123;</span><br><span class="line">    maxing = <span class="string">'maxWait'</span> <span class="keyword">in</span> options</span><br><span class="line">    <span class="comment">// 如果延迟的时间(wait)大于最大的延迟时间(maxWait)，则取延迟时间为最大延迟时间</span></span><br><span class="line">    maxWait = maxing ? <span class="built_in">Math</span>.max(+options.maxWait || <span class="number">0</span>, wait) : maxWait</span><br><span class="line">    leading = !!options.leading</span><br><span class="line">    trailing = <span class="string">'trailing'</span> <span class="keyword">in</span> options ? !!options.trailing : trailing</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 判断是否是object</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">isObject</span>(<span class="params">value</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> type = <span class="keyword">typeof</span> value</span><br><span class="line">    <span class="keyword">return</span> value != <span class="literal">null</span> &amp;&amp; (type === <span class="string">'object'</span> || type === <span class="string">'function'</span>)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 出发函数 func</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">invokeFunction</span>(<span class="params">time</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> args = lastArgs</span><br><span class="line">    <span class="keyword">const</span> that = lastThis</span><br><span class="line">    lastInvokeTime = time</span><br><span class="line">    lastArgs = lastThis = <span class="literal">undefined</span></span><br><span class="line">    func.apply(that, args)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 定时器到期后的执行函数</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">timeExpired</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> time = <span class="built_in">Date</span>.now()</span><br><span class="line">    <span class="keyword">if</span> (canInvoke(time)) &#123;</span><br><span class="line">      <span class="keyword">return</span> trailingEdge(time)</span><br><span class="line">    &#125;</span><br><span class="line">    timerId = startTimer(remainingWait(time))</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 计算真正的应该设置延迟的时间</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">remainingWait</span>(<span class="params">time</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> timeSinceLastCall = time - lastCallTime <span class="comment">// 距离上次调用的时间</span></span><br><span class="line">    <span class="keyword">const</span> timeSinceLastInvoke = time - lastInvokeTime <span class="comment">// 距离上次触发的时间</span></span><br><span class="line">    <span class="keyword">const</span> timeWaiting = wait - timeSinceLastCall <span class="comment">// 调整后的需要等待的时间</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> maxing ? <span class="built_in">Math</span>.min(timeWaiting, maxWait - timeSinceLastInvoke) : timeWaiting</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 是否能够触发函数</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">canInvoke</span>(<span class="params">time</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> timeSinceLastCall = time - lastCallTime</span><br><span class="line">    <span class="keyword">const</span> timeSinceLastInvoke = time - lastInvokeTime</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      lastCallTime === <span class="literal">undefined</span> || <span class="comment">// 第一次触发</span></span><br><span class="line">      timeSinceLastCall &gt;= wait || <span class="comment">// 时间到了</span></span><br><span class="line">      timeSinceLastCall &lt; <span class="number">0</span> || <span class="comment">// 系统时间被改了</span></span><br><span class="line">      (maxing &amp;&amp; timeSinceLastInvoke &gt;= maxWait) <span class="comment">// 有最大触发时间，而且距离上次触发的时间大于maxWait</span></span><br><span class="line">    )</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 设置定时器的函数</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">startTimer</span>(<span class="params">time</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> setTimeout(timeExpired, time)</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 后置触发的方法</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">trailingEdge</span>(<span class="params">time</span>) </span>&#123;</span><br><span class="line">    timerId = <span class="literal">undefined</span></span><br><span class="line">    <span class="comment">// 这里引用其他人的解释，目前我不是很清楚</span></span><br><span class="line">    <span class="comment">// 只有当事件至少发生过一次且配置了末端触发才调用真正的事件处理事件，</span></span><br><span class="line">    <span class="comment">// 意思是如果程序设置了末端触发，且没有设置最大等待时间</span></span><br><span class="line">    <span class="comment">// 但是时间自始至终只触发了一次，则真正的事件处理程序永远不会执行</span></span><br><span class="line">    <span class="keyword">if</span> (trailing &amp;&amp; lastArgs) &#123;</span><br><span class="line">      invokeFunction(time)</span><br><span class="line">    &#125;</span><br><span class="line">    lastThis = lastArgs = <span class="literal">undefined</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 前置触发的方法</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">leadingEdge</span>(<span class="params">time</span>) </span>&#123;</span><br><span class="line">    lastInvokeTime = time <span class="comment">// 重置最近一次触发时间</span></span><br><span class="line">    timerId = startTimer(wait)</span><br><span class="line">    leading ? invokeFunction(time) : <span class="literal">null</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 要返回的debounce函数</span></span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">debounced</span>(<span class="params">...arg</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> time = <span class="built_in">Date</span>.now()</span><br><span class="line">    <span class="keyword">const</span> isInvoking = canInvoke(time)</span><br><span class="line"></span><br><span class="line">    lastArgs = arg</span><br><span class="line">    lastThis = <span class="keyword">this</span></span><br><span class="line">    lastCallTime = time</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (isInvoking) &#123;</span><br><span class="line">      <span class="keyword">if</span> (timerId === <span class="literal">undefined</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> leadingEdge(lastCallTime)</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">if</span> (maxing) &#123;</span><br><span class="line">        timerId = startTimer(wait)</span><br><span class="line">        <span class="keyword">return</span> invokeFunction(lastCallTime)</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 负责一种情况，如果后置触发，已经触发过一次了，</span></span><br><span class="line">    <span class="comment">// 然后timerId被设置成undefined，在wait时间内触发的时候，我们需要再次初始化一次计时器</span></span><br><span class="line">    <span class="keyword">if</span> (timerId === <span class="literal">undefined</span>) &#123;</span><br><span class="line">      timerId = startTimer(wait)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> debounced</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样基本上就是把lodash的防抖函数都扒的差不多了，除了一些取消和立即执行的函数，和一些其他附加的东西，这些之后再补充，不过也不是特别重要</p>
 <h2 id="reference"><a href="#reference" class="headerlink" title="reference"></a>reference</h2><p><a href="https://github.com/mqyqingfeng/Blog/issues/22" target="_blank" rel="noopener">https://github.com/mqyqingfeng/Blog/issues/22</a><br><a href="https://juejin.im/post/6844903990639984654#heading-5" target="_blank" rel="noopener">https://juejin.im/post/6844903990639984654#heading-5</a></p>
 
           
@@ -1838,13 +1309,141 @@ input.addEventListener('input', d)
 
 
     
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://gulovelife.github.io/2020/07/19/hello-world/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="gu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="glovelife">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/07/19/hello-world/" itemprop="url">Hello World</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-07-19T21:17:40+08:00">
+                2020-07-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
+
+<p>More info: <a href="https://hexo.io/docs/one-command-deployment.html" target="_blank" rel="noopener">Deployment</a></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
   </section>
 
   
-  <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">&lt;i class&#x3D;&quot;fa fa-angle-right&quot;&gt;&lt;&#x2F;i&gt;</a>
-  </nav>
-
 
 
           </div>
@@ -1888,7 +1487,7 @@ input.addEventListener('input', d)
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-count">9</span>
                 <span class="site-state-item-name">posts</span>
               </a>
             </div>

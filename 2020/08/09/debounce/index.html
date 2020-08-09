@@ -94,15 +94,15 @@
 
 
 
-<meta name="description" content="12345678910111213141516console.log(&#39;1&#39;)async function async1() &amp;#123;  console.log(&#39;2&#39;)  await &#39;await的结果&#39;  console.log(&#39;5&#39;)&amp;#125;async1()console.log(&#39;3&#39;)new Promise(function (resolve) &amp;#123;  console.">
+<meta name="description" content="function debounce(func, wait, options) {   let timerId,     lastArgs,     lastThis,     lastCallTime,     maxWait    let trailing &#x3D; true,     leading &#x3D; false,     maxing &#x3D; false,     lastInvokeTime &#x3D;">
 <meta property="og:type" content="article">
-<meta property="og:title" content="await&amp;async和事件循环">
-<meta property="og:url" content="http://gulovelife.github.io/2020/07/21/await&async%E5%92%8C%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF/index.html">
+<meta property="og:title" content="debounce">
+<meta property="og:url" content="http://gulovelife.github.io/2020/08/09/debounce/index.html">
 <meta property="og:site_name" content="glovelife">
-<meta property="og:description" content="12345678910111213141516console.log(&#39;1&#39;)async function async1() &amp;#123;  console.log(&#39;2&#39;)  await &#39;await的结果&#39;  console.log(&#39;5&#39;)&amp;#125;async1()console.log(&#39;3&#39;)new Promise(function (resolve) &amp;#123;  console.">
+<meta property="og:description" content="function debounce(func, wait, options) {   let timerId,     lastArgs,     lastThis,     lastCallTime,     maxWait    let trailing &#x3D; true,     leading &#x3D; false,     maxing &#x3D; false,     lastInvokeTime &#x3D;">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2020-07-21T06:42:36.799Z">
-<meta property="article:modified_time" content="2020-07-28T13:46:20.552Z">
+<meta property="article:published_time" content="2020-08-09T06:11:40.690Z">
+<meta property="article:modified_time" content="2020-08-09T10:39:17.606Z">
 <meta property="article:author" content="gu">
 <meta name="twitter:card" content="summary">
 
@@ -133,13 +133,13 @@
 
 
 
-  <link rel="canonical" href="http://gulovelife.github.io/2020/07/21/await&async和事件循环/"/>
+  <link rel="canonical" href="http://gulovelife.github.io/2020/08/09/debounce/"/>
 
 
 
 
 
-  <title>await&async和事件循环 | glovelife</title>
+  <title>debounce | glovelife</title>
   
 
 
@@ -262,7 +262,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://gulovelife.github.io/2020/07/21/await&async%E5%92%8C%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF/">
+    <link itemprop="mainEntityOfPage" href="http://gulovelife.github.io/2020/08/09/debounce/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="gu">
@@ -279,7 +279,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">await&async和事件循环</h1>
+          <h1 class="post-title" itemprop="name headline">debounce</h1>
         
 
         <div class="post-meta">
@@ -291,8 +291,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-07-21T14:42:36+08:00">
-                2020-07-21
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-08-09T14:11:40+08:00">
+                2020-08-09
               </time>
             
 
@@ -329,14 +329,287 @@
       
 
       
-        <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">console</span>.log(<span class="string">'1'</span>)</span><br><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">async1</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'2'</span>)</span><br><span class="line">  <span class="keyword">await</span> <span class="string">'await的结果'</span></span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'5'</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">async1()</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'3'</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="keyword">function</span> (<span class="params">resolve</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'4'</span>)</span><br><span class="line">  resolve()</span><br><span class="line">&#125;).then(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'6'</span>)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
-<p>另一个————————————–</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">async1</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'2'</span>)</span><br><span class="line">  <span class="keyword">await</span> async2()</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'7'</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="function"><span class="keyword">function</span> <span class="title">async2</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'3'</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">setTimeout(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'8'</span>)</span><br><span class="line">&#125;, <span class="number">0</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'1'</span>)</span><br><span class="line">async1()</span><br><span class="line"></span><br><span class="line"><span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="keyword">function</span> (<span class="params">resolve</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'4'</span>)</span><br><span class="line">  resolve()</span><br><span class="line">&#125;).then(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="string">'6'</span>)</span><br><span class="line">&#125;)</span><br><span class="line"><span class="built_in">console</span>.log(<span class="string">'5'</span>)</span><br></pre></td></tr></table></figure>
+        function debounce(func, wait, options) {
+  let timerId,
+    lastArgs,
+    lastThis,
+    lastCallTime,
+    maxWait
 
-<p><a href="https://juejin.im/post/5c148ec8e51d4576e83fd836" target="_blank" rel="noopener">https://juejin.im/post/5c148ec8e51d4576e83fd836</a></p>
-<p>自己的试验</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="params">resolve</span> =&gt;</span> &#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="params">resolve</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="number">1</span>)</span><br><span class="line">    resolve()</span><br><span class="line">  &#125;).then(<span class="function"><span class="params">()</span> =&gt;</span> <span class="built_in">console</span>.log(<span class="number">3</span>))</span><br><span class="line">  resolve()</span><br><span class="line"></span><br><span class="line">&#125;).then(<span class="function"><span class="params">()</span> =&gt;</span> <span class="built_in">console</span>.log(<span class="number">4</span>))</span><br><span class="line"></span><br><span class="line"><span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="params">resolve</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(<span class="number">2</span>)</span><br><span class="line">  resolve()</span><br><span class="line">&#125;).then(<span class="function"><span class="params">()</span> =&gt;</span> <span class="built_in">console</span>.log(<span class="number">5</span>))</span><br></pre></td></tr></table></figure>
+  let trailing = true,
+    leading = false,
+    maxing = false,
+    lastInvokeTime = 0
 
+  if (isObject(options)) {
+    maxing = 'maxWait' in options
+    // 如果延迟的时间(wait)大于最大的延迟时间(maxWait)，则取延迟时间为最大延迟时间
+    maxWait = maxing ? Math.max(+options.maxWait || 0, wait) : maxWait
+    leading = !!options.leading
+    trailing = 'trailing' in options ? !!options.trailing : trailing
+  }
+
+  // 判断是否是object
+  function isObject(value) {
+    const type = typeof value
+    return value != null && (type === 'object' || type === 'function')
+  }
+
+  // 出发函数 func
+  function invokeFunction(time) {
+    const args = lastArgs
+    const that = lastThis
+    lastInvokeTime = time
+    lastArgs = lastThis = undefined
+    func.apply(that, args)
+  }
+
+  // 定时器到期后的执行函数
+  function timeExpired() {
+    const time = Date.now()
+    if (canInvoke(time)) {
+      return trailingEdge(time)
+    }
+    timerId = startTimer(remainingWait(time))
+  }
+
+  // 计算真正的应该设置延迟的时间
+  function remainingWait(time) {
+    const timeSinceLastCall = time - lastCallTime // 距离上次调用的时间
+    const timeSinceLastInvoke = time - lastInvokeTime // 距离上次触发的时间
+    const timeWaiting = wait - timeSinceLastCall // 调整后的需要等待的时间
+
+    return maxing ? Math.min(timeWaiting, maxWait - timeSinceLastInvoke) : timeWaiting
+  }
+
+  // 是否能够触发函数
+  function canInvoke(time) {
+    const timeSinceLastCall = time - lastCallTime
+    const timeSinceLastInvoke = time - lastInvokeTime
+    return (
+      lastCallTime === undefined || // 第一次触发
+      timeSinceLastCall >= wait || // 时间到了
+      timeSinceLastCall < 0 || // 系统时间被改了
+      (maxing && timeSinceLastInvoke >= maxWait) // 有最大触发时间，而且距离上次触发的时间大于maxWait
+    )
+  }
+
+  // 设置定时器的函数
+  function startTimer(time) {
+    return setTimeout(timeExpired, time)
+  }
+
+  // 后置触发的方法
+  function trailingEdge(time) {
+    timerId = undefined
+    // 这里引用其他人的解释，目前我不是很清楚
+    // 只有当事件至少发生过一次且配置了末端触发才调用真正的事件处理事件，
+    // 意思是如果程序设置了末端触发，且没有设置最大等待时间
+    // 但是时间自始至终只触发了一次，则真正的事件处理程序永远不会执行
+    if (trailing && lastArgs) {
+      invokeFunction(time)
+    }
+    lastThis = lastArgs = undefined
+  }
+
+  // 前置触发的方法
+  function leadingEdge(time) {
+    lastInvokeTime = time
+    timerId = startTimer(wait)
+    leading ? invokeFunction(time) : null
+  }
+
+  // 要返回的debounce函数
+  function debounced(...arg) {
+    const time = Date.now()
+    const isInvoking = canInvoke(time)
+
+    lastArgs = arg
+    lastThis = this
+    lastCallTime = time
+
+    if (isInvoking) {
+      if (timerId === undefined) {
+        return leadingEdge(lastCallTime)
+      }
+      if (maxing) {
+        timerId = startTimer(wait)
+        return invokeFunction(lastCallTime)
+      }
+    }
+    // 负责一种情况，如果后置触发，已经触发过一次了，
+    // 然后timerId被设置成undefined，在wait时间内触发的时候，我们需要再次初始化一次计时器
+    if (timerId === undefined) {
+      timerId = startTimer(wait)
+    }
+  }
+  return debounced
+}
+
+
+function lodashDebounce(func, wait, options) {
+  let lastArgs,
+    lastThis,
+    maxWait,
+    result,
+    timerId,
+    lastCallTime
+
+  let lastInvokeTime = 0
+  let leading = false
+  let maxing = false
+  let trailing = true
+
+  // Bypass `requestAnimationFrame` by explicitly setting `wait=0`.
+  // const useRAF = (!wait && wait !== 0 && typeof root.requestAnimationFrame === 'function')
+
+  function isObject(value) {
+    const type = typeof value
+    return value != null && (type === 'object' || type === 'function')
+  }
+
+  if (typeof func !== 'function') {
+    throw new TypeError('Expected a function')
+  }
+  wait = +wait || 0
+  if (isObject(options)) {
+    leading = !!options.leading
+    maxing = 'maxWait' in options
+    maxWait = maxing ? Math.max(+options.maxWait || 0, wait) : maxWait
+    trailing = 'trailing' in options ? !!options.trailing : trailing
+  }
+
+  function invokeFunc(time) {
+    const args = lastArgs
+    const thisArg = lastThis
+
+    lastArgs = lastThis = undefined
+    lastInvokeTime = time
+    result = func.apply(thisArg, args)
+    return result
+  }
+
+  function startTimer(pendingFunc, wait) {
+    // if (useRAF) {
+    //   root.cancelAnimationFrame(timerId)
+    //   return root.requestAnimationFrame(pendingFunc)
+    // }
+    return setTimeout(pendingFunc, wait)
+  }
+
+  function cancelTimer(id) {
+    // if (useRAF) {
+    //   return root.cancelAnimationFrame(id)
+    // }
+    clearTimeout(id)
+  }
+
+  function leadingEdge(time) {
+    // Reset any `maxWait` timer.
+    lastInvokeTime = time
+    // Start the timer for the trailing edge.
+    timerId = startTimer(timerExpired, wait)
+    // Invoke the leading edge.
+    return leading ? invokeFunc(time) : result
+  }
+
+  function remainingWait(time) {
+    const timeSinceLastCall = time - lastCallTime
+    const timeSinceLastInvoke = time - lastInvokeTime
+    const timeWaiting = wait - timeSinceLastCall
+
+    return maxing
+      ? Math.min(timeWaiting, maxWait - timeSinceLastInvoke)
+      : timeWaiting
+  }
+
+  function shouldInvoke(time) {
+    const timeSinceLastCall = time - lastCallTime
+    const timeSinceLastInvoke = time - lastInvokeTime
+
+    // Either this is the first call, activity has stopped and we're at the
+    // trailing edge, the system time has gone backwards and we're treating
+    // it as the trailing edge, or we've hit the `maxWait` limit.
+    return (lastCallTime === undefined || (timeSinceLastCall >= wait) ||
+      (timeSinceLastCall < 0) || (maxing && timeSinceLastInvoke >= maxWait))
+  }
+
+  function timerExpired() {
+    const time = Date.now()
+    if (shouldInvoke(time)) {
+      return trailingEdge(time)
+    }
+    // Restart the timer.
+    timerId = startTimer(timerExpired, remainingWait(time))
+  }
+
+  function trailingEdge(time) {
+    timerId = undefined
+
+    // Only invoke if we have `lastArgs` which means `func` has been
+    // debounced at least once.
+    if (trailing && lastArgs) {
+      return invokeFunc(time)
+    }
+    lastArgs = lastThis = undefined
+    return result
+  }
+
+  function cancel() {
+    if (timerId !== undefined) {
+      cancelTimer(timerId)
+    }
+    lastInvokeTime = 0
+    lastArgs = lastCallTime = lastThis = timerId = undefined
+  }
+
+  function flush() {
+    return timerId === undefined ? result : trailingEdge(Date.now())
+  }
+
+  function pending() {
+    return timerId !== undefined
+  }
+
+  function debounced(...args) {
+    const time = Date.now()
+    const isInvoking = shouldInvoke(time)
+
+    lastArgs = args
+    lastThis = this
+    lastCallTime = time
+
+    if (isInvoking) {
+      if (timerId === undefined) {
+        return leadingEdge(lastCallTime)
+      }
+      if (maxing) {
+        // Handle invocations in a tight loop.
+        timerId = startTimer(timerExpired, wait)
+        return invokeFunc(lastCallTime)
+      }
+    }
+    if (timerId === undefined) {
+      timerId = startTimer(timerExpired, wait)
+    }
+    return result
+  }
+  debounced.cancel = cancel
+  debounced.flush = flush
+  debounced.pending = pending
+  return debounced
+}
+
+
+const d = debounce(e => {
+  console.log(e.target.value);
+}, 500, {
+  leading: false,
+  maxWait: 1000
+})
+
+var input = document.getElementById('input')
+input.addEventListener('input', d)
       
     </div>
     
@@ -360,8 +633,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/07/19/hello-world/" rel="next" title="Hello World">
-                <i class="fa fa-chevron-left"></i> Hello World
+              <a href="/2020/08/09/index/" rel="next" title="index">
+                <i class="fa fa-chevron-left"></i> index
               </a>
             
           </div>
@@ -369,10 +642,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2020/07/28/BFS/" rel="prev" title="BFS">
-                BFS <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>

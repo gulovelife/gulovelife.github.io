@@ -260,6 +260,259 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://gulovelife.github.io/2020/07/30/Object.assign%E5%92%8Ccreate%E7%9A%84%E4%BD%BF%E7%94%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="gu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="glovelife">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/07/30/Object.assign%E5%92%8Ccreate%E7%9A%84%E4%BD%BF%E7%94%A8/" itemprop="url">Object.assign和create的使用</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-07-30T11:37:48+08:00">
+                2020-07-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>先占坑</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://gulovelife.github.io/2020/07/28/BFS/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="gu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="glovelife">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/07/28/BFS/" itemprop="url">BFS</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-07-28T21:47:43+08:00">
+                2020-07-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="BFS-广度优先搜索"><a href="#BFS-广度优先搜索" class="headerlink" title="BFS-广度优先搜索"></a>BFS-广度优先搜索</h1><h4 id="什么是广度优先搜索"><a href="#什么是广度优先搜索" class="headerlink" title="什么是广度优先搜索"></a>什么是广度优先搜索</h4><p>广度优先搜索，就是系统的搜索整个图或者树，直到找到目标节点为止。<br>从根节点或者起始节点开始，将根节点的所有子节点加入队列当中，然后遍历子节点并将子节点的子节点加入队列，简单的说就是一层一层的遍历，一圈一圈的遍历。</p>
+<h4 id="实现方式"><a href="#实现方式" class="headerlink" title="实现方式"></a>实现方式</h4><ul>
+<li>首先将根节点放入队列中。  </li>
+<li>从队列中取出第一个节点，并检验它是否为目标。<ul>
+<li>如果找到目标，则结束搜索并回传结果。</li>
+<li>否则将它所有尚未检验过的直接子节点加入队列中。</li>
+</ul>
+</li>
+<li>若队列为空，表示整张图都检查过了——亦即图中没有欲搜索的目标。结束搜索并回传“找不到目标”。<br>重复步骤2</li>
+</ul>
+<h4 id="labuladong的万能公式"><a href="#labuladong的万能公式" class="headerlink" title="labuladong的万能公式"></a>labuladong的万能公式</h4><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 计算从起点 start 到终点 target 的最近距离</span></span><br><span class="line">int BFS(Node start, Node target) &#123;</span><br><span class="line">    Queue&lt;Node&gt; q; <span class="comment">// 核心数据结构</span></span><br><span class="line">    <span class="built_in">Set</span>&lt;Node&gt; visited; <span class="comment">// 避免走回头路</span></span><br><span class="line">    </span><br><span class="line">    q.offer(start); <span class="comment">// 将起点加入队列</span></span><br><span class="line">    visited.add(start); <span class="comment">// 起点加入访问过的集合</span></span><br><span class="line">    int step = <span class="number">0</span>; <span class="comment">// 记录扩散的步数</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (q not empty) &#123;</span><br><span class="line">        int sz = q.size(); <span class="comment">// 由于我们会不断的向队尾加入节点，所以要先声明sz，队列的前sz个为当前循环查找的这层数据</span></span><br><span class="line">        <span class="comment">/* 将当前队列中的所有节点向四周扩散 */</span></span><br><span class="line">        <span class="keyword">for</span> (int i = <span class="number">0</span>; i &lt; sz; i++) &#123;</span><br><span class="line">            Node cur = q.poll(); <span class="comment">// 将队列的第一个节点从队列推出，先进先出</span></span><br><span class="line">            <span class="comment">/* 划重点：这里判断是否到达终点 */</span></span><br><span class="line">            <span class="keyword">if</span> (cur is target)</span><br><span class="line">                <span class="keyword">return</span> step;</span><br><span class="line">            <span class="comment">/* 将 cur 的相邻节点加入队列 */</span></span><br><span class="line">            <span class="keyword">for</span> (Node x : cur.adj()) <span class="comment">// 循环该节点的子节点</span></span><br><span class="line">                <span class="keyword">if</span> (x not <span class="keyword">in</span> visited) &#123; <span class="comment">// 方式走弯路</span></span><br><span class="line">                    q.offer(x);</span><br><span class="line">                    visited.add(x);</span><br><span class="line">                &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">/* 划重点：更新步数在这里 */</span></span><br><span class="line">        step++;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>查看注释可以理解这个BFS的万能公式的含义，其中也加了自己的理解<br>我们拿LeetCode上的一道题为例<a href="https://leetcode-cn.com/problems/open-the-lock/" target="_blank" rel="noopener">752. 打开转盘锁</a><br>下面是我根据这个万能公式写的题解，加了一些注释在里面  </p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;string[]&#125;</span> <span class="variable">deadends</span></span></span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param <span class="type">&#123;string&#125;</span> <span class="variable">target</span></span></span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return <span class="type">&#123;number&#125;</span></span></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">var</span> openLock = <span class="function"><span class="keyword">function</span>(<span class="params">deadends, target</span>) </span>&#123;</span><br><span class="line"><span class="keyword">if</span> (deadends.indexOf(<span class="string">'0000'</span>) !== <span class="number">-1</span>) <span class="keyword">return</span> <span class="number">-1</span></span><br><span class="line">    <span class="keyword">const</span> q = []</span><br><span class="line">    <span class="comment">// 一开始使用的是数组，一直超时，之后改成了集合，访问的更快点</span></span><br><span class="line">    <span class="keyword">const</span> visited = <span class="keyword">new</span> <span class="built_in">Set</span>(deadends) <span class="comment">// 将访问过的集合和deadends合并，减少判断</span></span><br><span class="line"></span><br><span class="line">    q.push(<span class="string">'0000'</span>)</span><br><span class="line">    visited.add(<span class="string">'0000'</span>)</span><br><span class="line">    <span class="keyword">let</span> path = <span class="number">0</span></span><br><span class="line">    <span class="keyword">while</span> (q.length) &#123; <span class="comment">// 确保没有循环到图的终点</span></span><br><span class="line">        <span class="keyword">const</span> size = q.length</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; size; i++) &#123; <span class="comment">// 循环当前这一层的所有节点</span></span><br><span class="line">            <span class="keyword">const</span> node = q.shift()</span><br><span class="line">            <span class="keyword">if</span> (node === target) &#123;</span><br><span class="line">                <span class="keyword">return</span> path</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">let</span> j = <span class="number">0</span>; j &lt; <span class="number">4</span>; j++) &#123; <span class="comment">// 循环该节点的子节点，这个题的子节点不太好运算</span></span><br><span class="line">                <span class="keyword">let</span> arr = node.split(<span class="string">''</span>)</span><br><span class="line">                arr[j] - <span class="number">1</span> === <span class="number">-1</span> ?</span><br><span class="line">                    arr[j] = <span class="string">'9'</span> :</span><br><span class="line">                    arr[j] = arr[j] - <span class="number">1</span></span><br><span class="line">                <span class="keyword">const</span> left = arr.join(<span class="string">''</span>)</span><br><span class="line">                <span class="keyword">if</span> (!visited.has(left)) &#123;</span><br><span class="line">                    q.push(left)</span><br><span class="line">                    visited.add(left)</span><br><span class="line">                &#125;</span><br><span class="line">                arr = node.split(<span class="string">''</span>)</span><br><span class="line">                <span class="built_in">Number</span>(arr[j]) + <span class="number">1</span> === <span class="number">10</span> ?</span><br><span class="line">                    arr[j] = <span class="string">'0'</span> :</span><br><span class="line">                    arr[j] = (+arr[j] + <span class="number">1</span>).toString()</span><br><span class="line">                <span class="keyword">const</span> right = arr.join(<span class="string">''</span>)</span><br><span class="line">                <span class="keyword">if</span> (!visited.has(right)) &#123;</span><br><span class="line">                    q.push(right)</span><br><span class="line">                    visited.add(right)</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        path++ <span class="comment">// 路径加一</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">-1</span> <span class="comment">// 循环完了都没有找到target，则返回-1</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>这个代码只是A过了，没有继续优化，还有很多地方可以优化的<br>BFS解题思路比较清晰，但是提交的时候，时间复杂度和空间复杂度都很高，所以能用其他的，感觉还是用其他的比较好</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://gulovelife.github.io/2020/07/21/await&async%E5%92%8C%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -555,7 +808,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-count">14</span>
                 <span class="site-state-item-name">posts</span>
               </a>
             </div>

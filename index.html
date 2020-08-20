@@ -260,6 +260,141 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://gulovelife.github.io/2020/08/20/%E6%9C%80%E9%95%BF%E5%9B%9E%E6%96%87%E5%AD%90%E4%B8%B2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="gu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="glovelife">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/08/20/%E6%9C%80%E9%95%BF%E5%9B%9E%E6%96%87%E5%AD%90%E4%B8%B2/" itemprop="url">最长回文子串</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-08-20T10:40:53+08:00">
+                2020-08-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h3 id="什么是回文子串"><a href="#什么是回文子串" class="headerlink" title="什么是回文子串"></a>什么是回文子串</h3><p>回文字符串就是正着读和反着读是一样的字符串。  </p>
+<h3 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h3><p>给一个字符串，找出字符串中的最长的回文子串。<br>这个问题有很多种解法。比如暴力解法，动态规划，中心扩散，Manacher算法。</p>
+<h3 id="中心扩散"><a href="#中心扩散" class="headerlink" title="中心扩散"></a>中心扩散</h3><p>回文子串的判定方式，最简单的就是从中间开始，向两边扩散，然后对比扩散的时候，扩散的字符是否相同。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> isPalindrome = <span class="function">(<span class="params">left, right, str</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">while</span> (left &gt;= <span class="number">0</span> &amp;&amp; right &lt; str.length &amp;&amp; str[left] === str[right]) &#123;</span><br><span class="line">    left--</span><br><span class="line">    right++</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> str.substring(left + <span class="number">1</span>, right) <span class="comment">// 这里要返回的字符串不是left和right所在位置的字符串，而是去除所在位置的字符之后的字符串，因为这两个位置的字符不符合要求。这点需要注意</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后用for循环遍历字符串，让每个位置的字符都做一次中心字符，找出最大的子字符串，就ok了。<br>这里有一点要注意，回文字符串有两种，一种是奇数长度的aba，一种是偶数长度的abba，那么在扩散的时候，要扩散两种方式。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; s.length; i++) &#123;</span><br><span class="line">  <span class="keyword">let</span> len1 = isPalindrome(i, i, s)</span><br><span class="line">  <span class="keyword">let</span> len2 = isPalindrome(i, i + <span class="number">1</span>, s)</span><br><span class="line">  result = len1.length &gt; result.length ? len1 : result</span><br><span class="line">  result = len2.length &gt; result.length ? len2 : result</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>第一种是以i为中心的，第二种是以i和i+1中间的位置为中心的，这样就覆盖了所有位置。<br>最终代码：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> longestPalindrome = <span class="function"><span class="keyword">function</span> (<span class="params">s</span>) </span>&#123;</span><br><span class="line">  <span class="comment">// 中心拓展法</span></span><br><span class="line">  <span class="keyword">const</span> isPalindrome = <span class="function">(<span class="params">left, right, str</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">while</span> (left &gt;= <span class="number">0</span> &amp;&amp; right &lt; str.length &amp;&amp; str[left] === str[right]) &#123;</span><br><span class="line">      left--</span><br><span class="line">      right++</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> str.substring(left + <span class="number">1</span>, right)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">let</span> result = <span class="string">''</span></span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; s.length; i++) &#123;</span><br><span class="line">    <span class="keyword">let</span> len1 = isPalindrome(i, i, s)</span><br><span class="line">    <span class="keyword">let</span> len2 = isPalindrome(i, i + <span class="number">1</span>, s)</span><br><span class="line">    result = len1.length &gt; result.length ? len1 : result</span><br><span class="line">    result = len2.length &gt; result.length ? len2 : result</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> result</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h3 id="暴力匹配"><a href="#暴力匹配" class="headerlink" title="暴力匹配"></a>暴力匹配</h3><p>暴力匹配的逻辑很简单，遍历所有长度大于1的子串，然后判断是否是回文。这个简单暴力，但是时间复杂度很高。不过我们可以对这个方法进行简单的剪枝，就是只针对比当前得到的最大回文子串长的子串进行验证。如何验证这个子串是回文呢，用下面的方法。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> isPalindrome = <span class="function">(<span class="params">left, right, str</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">while</span> (left &lt; right) &#123;</span><br><span class="line">    <span class="keyword">if</span> (str[left] !== str[right]) <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">    left++</span><br><span class="line">    right--</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>跟之前的验证方式是差不多的。下面是完整的代码。  </p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> isPalindrome = <span class="function">(<span class="params">left, right, str</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">while</span> (left &lt; right) &#123;</span><br><span class="line">    <span class="keyword">if</span> (str[left] !== str[right]) <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">    left++</span><br><span class="line">    right--</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">let</span> result = <span class="number">0</span>,</span><br><span class="line">  end = <span class="number">0</span></span><br><span class="line"><span class="keyword">const</span> len = s.length</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; len; i++) &#123;</span><br><span class="line">  <span class="keyword">for</span> (<span class="keyword">let</span> j = i + <span class="number">1</span>; j &lt; len; j++) &#123;</span><br><span class="line">    <span class="keyword">if</span> (j - i &gt; result &amp;&amp; isPalindrome(i, j, s)) &#123;</span><br><span class="line">      result = j - i</span><br><span class="line">      end = i</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> s.substr(end, result + <span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+
+<h3 id="动态规划"><a href="#动态规划" class="headerlink" title="动态规划"></a>动态规划</h3><p>待补充</p>
+<h3 id="Manacher算法"><a href="#Manacher算法" class="headerlink" title="Manacher算法"></a>Manacher算法</h3><p>待补充</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://gulovelife.github.io/2020/08/13/%E5%B9%B6%E6%9F%A5%E9%9B%86&Union-Find/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1474,126 +1609,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://gulovelife.github.io/2020/08/03/babel%E8%A7%A3%E6%9E%90/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="gu">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="glovelife">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/08/03/babel%E8%A7%A3%E6%9E%90/" itemprop="url">babel解析</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2020-08-03T12:17:07+08:00">
-                2020-08-03
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>占坑<br><a href="https://mp.weixin.qq.com/s/hFI__QcPrYTo3lZX7L82NA" target="_blank" rel="noopener">https://mp.weixin.qq.com/s/hFI__QcPrYTo3lZX7L82NA</a></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1644,7 +1659,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-count">16</span>
                 <span class="site-state-item-name">posts</span>
               </a>
             </div>

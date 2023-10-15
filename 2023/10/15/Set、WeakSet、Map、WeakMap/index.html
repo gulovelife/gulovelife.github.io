@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"gulovelife.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="介绍这里算是阮一峰老师es6入门那个书里的Set和Map那一章的学习笔记，不会记的很全，但是是查漏补缺。 内容下面就开始吧   Set set可以接受一个数组或者具有iterable接口的其他数据结构作为参数，用来初始化。dom也可以。   可以用[...new Set(array)]来做去重 set在add的时候不会发生类型转换，类似于&#x3D;&#x3D;&#x3D;，但是还是略有不同，NaN和NaN是相同的。两个对象总">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Set、WeakSet、Map、WeakMap">
+<meta property="og:url" content="http://gulovelife.github.io/2023/10/15/Set%E3%80%81WeakSet%E3%80%81Map%E3%80%81WeakMap/index.html">
+<meta property="og:site_name" content="glovelife">
+<meta property="og:description" content="介绍这里算是阮一峰老师es6入门那个书里的Set和Map那一章的学习笔记，不会记的很全，但是是查漏补缺。 内容下面就开始吧   Set set可以接受一个数组或者具有iterable接口的其他数据结构作为参数，用来初始化。dom也可以。   可以用[...new Set(array)]来做去重 set在add的时候不会发生类型转换，类似于&#x3D;&#x3D;&#x3D;，但是还是略有不同，NaN和NaN是相同的。两个对象总">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-10-15T08:56:26.000Z">
+<meta property="article:modified_time" content="2023-10-15T09:31:45.328Z">
+<meta property="article:author" content="gu">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://gulovelife.github.io/2023/10/15/Set%E3%80%81WeakSet%E3%80%81Map%E3%80%81WeakMap/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>Set、WeakSet、Map、WeakMap | glovelife</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">glovelife</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://gulovelife.github.io/2023/10/15/Set%E3%80%81WeakSet%E3%80%81Map%E3%80%81WeakMap/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="gu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="glovelife">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Set、WeakSet、Map、WeakMap
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2023-10-15 16:56:26 / Modified: 17:31:45" itemprop="dateCreated datePublished" datetime="2023-10-15T16:56:26+08:00">2023-10-15</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>这里算是阮一峰老师es6入门那个书里的Set和Map那一章的学习笔记，不会记的很全，但是是查漏补缺。</p>
+<h2 id="内容"><a href="#内容" class="headerlink" title="内容"></a>内容</h2><p>下面就开始吧  </p>
+<h3 id="Set"><a href="#Set" class="headerlink" title="Set"></a>Set</h3><ul>
+<li>set可以接受一个数组或者具有iterable接口的其他数据结构作为参数，用来初始化。dom也可以。  </li>
+<li>可以用<code>[...new Set(array)]</code>来做去重</li>
+<li>set在add的时候不会发生类型转换，类似于<code>===</code>，但是还是略有不同，NaN和NaN是相同的。两个对象总是不相同的，不管是不是空对象。</li>
+<li>set.add返回set本身，所以add可以连续调用</li>
+<li>Array.from可以将set转数组</li>
+<li>遍历操作，<code>keys()</code>&#x2F;<code>values()</code>&#x2F;<code>entries()</code>&#x2F;<code>forEach()</code></li>
+<li>并集<code>new Set([...a, ...b])</code></li>
+<li>交集<code>new Set([...a].filter(x =&gt; b.has(x)))</code></li>
+<li>差集<code>new Set([...a].filter(x =&gt; !b.has(x)))</code></li>
+<li>想要遍历的时候同步改变set结构，只能用原来的set映射出新的结构，然后改变之后再复制给set</li>
+</ul>
+<h3 id="WeakSet"><a href="#WeakSet" class="headerlink" title="WeakSet"></a>WeakSet</h3><ul>
+<li>和Set类似，但是只能放对象</li>
+<li>为什么叫WeakSet呢，是因为WeakSet中的对象都是弱引用，垃圾回收机制不考虑WeakSet中的引用，如果其他的对象不引用该对象，那么垃圾回收机制会自动将其回收。也就是说，只要引用内部对象的外部对象消失，那么内部对象也会消失。由于这种特性，所以WeakSet不能遍历，没有size，forEach等。</li>
+<li>WeakSet可以用来存储dom节点，因为不用担心节点从文档移出时，会引发内存泄漏。</li>
+</ul>
+<h3 id="Map"><a href="#Map" class="headerlink" title="Map"></a>Map</h3><ul>
+<li>为什么要有map呢，因为对象只能用字符串作为键，如果用一个对象作为键的话，就会被转化成<code>[object, Object]</code>。这是我们不希望的。所以出现了map，map可以让各种类型的值作为键。</li>
+<li><code>const map = new Map([[&#39;name&#39;: &#39;张三&#39;], [&#39;age&#39;: 25]])</code>。如果用<code>new Map()</code>这种方式新建一个map的话，里面的值必须是个键值对的方式，比如<code>[&#39;key&#39;, &#39;value&#39;]</code>。</li>
+<li>对于同一个对象的引用，map才将其视为一个键，如果只是内容相同的对象，map会视为两个键，因为引用的内存地址不一样。map的键跟内存地址绑定。如果不是引用类型，那需要严格相当。对于NaN则视为同一个键。</li>
+<li>遍历方法和set一样。map的forEach方法接收第二个参数，绑定this。</li>
+<li>对象转为map，可以用<code>Object.entries()</code>。<code>let obj = &#123;b: 1&#125;; Object.entries(obj) // [[&#39;a&#39;: 1]]</code></li>
+<li>JSON和Map的转换，需要注意键是不是字符串</li>
+</ul>
+<h3 id="WeakMap"><a href="#WeakMap" class="headerlink" title="WeakMap"></a>WeakMap</h3><ul>
+<li>只接受除了null的对象作为键</li>
+<li>WeakMap的键不计入垃圾回收</li>
+<li>目的在于，有时我们会想在某个对象上存一些数据，对这个对象进行说明，但是如果这个对象不需要了，我们需要手动删除这个引用，否则垃圾回收机制就不能释放空间。这个问题可以用WeakMap来解决，不用考虑WeakMap中的引用。</li>
+<li>只有get、set、has、delete</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/10/15/await&async%E5%92%8C%E4%BA%8B%E4%BB%B6%E5%BE%AA%E7%8E%AF/" rel="prev" title="await&async和事件循环">
+      <i class="fa fa-chevron-left"></i> await&async和事件循环
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2023/10/15/Object.assign%E5%92%8Ccreate%E7%9A%84%E4%BD%BF%E7%94%A8/" rel="next" title="Object.assign和create的使用">
+      Object.assign和create的使用 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%8B%E7%BB%8D"><span class="nav-number">1.</span> <span class="nav-text">介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%85%E5%AE%B9"><span class="nav-number">1.1.</span> <span class="nav-text">内容</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Set"><span class="nav-number">1.1.1.</span> <span class="nav-text">Set</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#WeakSet"><span class="nav-number">1.1.2.</span> <span class="nav-text">WeakSet</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Map"><span class="nav-number">1.1.3.</span> <span class="nav-text">Map</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#WeakMap"><span class="nav-number">1.1.4.</span> <span class="nav-text">WeakMap</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">gu</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">18</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">gu</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

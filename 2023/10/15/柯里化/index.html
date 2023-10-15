@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"gulovelife.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="什么是柯里化在计算机科学中，柯里化（英语：Currying），又译为卡瑞化或加里化，是把接受多个参数的函数变换成接受一个单一参数（最初函数的第一个参数）的函数，并且返回接受余下的参数而且返回结果的新函数的技术。–维基百科用人话讲，柯里化就是将一个有很多入参的函数，变成一个可以一个一个传入入参的函数，分步调用。 12345const add &#x3D; (a, b) &#x3D;&gt; a + bconst sum">
+<meta property="og:type" content="article">
+<meta property="og:title" content="柯里化">
+<meta property="og:url" content="http://gulovelife.github.io/2023/10/15/%E6%9F%AF%E9%87%8C%E5%8C%96/index.html">
+<meta property="og:site_name" content="glovelife">
+<meta property="og:description" content="什么是柯里化在计算机科学中，柯里化（英语：Currying），又译为卡瑞化或加里化，是把接受多个参数的函数变换成接受一个单一参数（最初函数的第一个参数）的函数，并且返回接受余下的参数而且返回结果的新函数的技术。–维基百科用人话讲，柯里化就是将一个有很多入参的函数，变成一个可以一个一个传入入参的函数，分步调用。 12345const add &#x3D; (a, b) &#x3D;&gt; a + bconst sum">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-10-15T08:56:26.000Z">
+<meta property="article:modified_time" content="2023-10-15T09:28:55.596Z">
+<meta property="article:author" content="gu">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://gulovelife.github.io/2023/10/15/%E6%9F%AF%E9%87%8C%E5%8C%96/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>柯里化 | glovelife</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">glovelife</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://gulovelife.github.io/2023/10/15/%E6%9F%AF%E9%87%8C%E5%8C%96/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="gu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="glovelife">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          柯里化
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2023-10-15 16:56:26 / Modified: 17:28:55" itemprop="dateCreated datePublished" datetime="2023-10-15T16:56:26+08:00">2023-10-15</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="什么是柯里化"><a href="#什么是柯里化" class="headerlink" title="什么是柯里化"></a>什么是柯里化</h1><p>在计算机科学中，柯里化（英语：Currying），又译为卡瑞化或加里化，是把接受多个参数的函数变换成接受一个单一参数（最初函数的第一个参数）的函数，并且返回接受余下的参数而且返回结果的新函数的技术。–维基百科<br>用人话讲，柯里化就是将一个有很多入参的函数，变成一个可以一个一个传入入参的函数，分步调用。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="title function_">add</span> = (<span class="params">a, b</span>) =&gt; a + b</span><br><span class="line"><span class="keyword">const</span> sum = <span class="title function_">curry</span>(add)</span><br><span class="line"><span class="keyword">const</span> add1 = <span class="title function_">add</span>(<span class="number">1</span>) <span class="comment">// 返回一个函数</span></span><br><span class="line"><span class="title function_">add1</span>(<span class="number">2</span>) <span class="comment">// 3</span></span><br><span class="line"><span class="title function_">add1</span>(<span class="number">3</span>) <span class="comment">// 4</span></span><br></pre></td></tr></table></figure>
+<h1 id="实现方式"><a href="#实现方式" class="headerlink" title="实现方式"></a>实现方式</h1><p>既然要将很多入参变成一个一个传入的，那就需要柯里化的函数里记录之前传入的参数。在返回函数之中记录参数，可以用到闭包。<br>所以我们的实现方式就是，用闭包将需要柯里化的函数的参数保存起来，当达到我们想要的个数的时候，再执行函数。  </p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">curry</span>(<span class="params">fn, ...arg</span>) &#123;</span><br><span class="line">  <span class="keyword">let</span> length = fn.<span class="property">length</span> - arg.<span class="property">length</span> <span class="comment">// 判断剩余的参数个数</span></span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">function</span> (<span class="params">...args</span>) &#123; <span class="comment">// 获取当前传入的参数个数</span></span><br><span class="line">    <span class="keyword">if</span> (args.<span class="property">length</span> &lt; length) &#123; <span class="comment">// 进行对比</span></span><br><span class="line">      <span class="keyword">return</span> <span class="title function_">curry</span>(fn, ...arg, ...args) <span class="comment">// 参数不够，则继续执行柯里化，将传入的参数带上</span></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="keyword">return</span> fn.<span class="title function_">apply</span>(<span class="literal">null</span>, [...arg, ...args]) <span class="comment">// 参数够了，则执行函数</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这种方式是将传入的入参保存了起来，保存到arg当中，然后每次检查arg的长度加上新传入的参数的长度，跟fn.length的长度是否一样，或者超过。如果小于原函数的参数大小，则递归返回一个curry的函数，否则执行fn。这个的好处是，在初始化curry函数的时候，就可以直接传入参数。<br>看一下另一个实现方式</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 参考自 segmentfault 的@大笑平 </span></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">currying</span> = fn =&gt;</span><br><span class="line">  judge = <span class="function">(<span class="params">...args</span>) =&gt;</span></span><br><span class="line">    args.<span class="property">length</span> &gt;= fn.<span class="property">length</span> ?</span><br><span class="line">    <span class="title function_">fn</span>(...args) :</span><br><span class="line">    <span class="function">(<span class="params">...arg</span>) =&gt;</span> <span class="title function_">judge</span>(...args, ...arg)</span><br></pre></td></tr></table></figure>
+<p>极简的实现方式，极度舒适。这个第一次初始化没办法传入参数。通过arg和args交替保存参数。</p>
+<h1 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h1><h2 id="延迟计算"><a href="#延迟计算" class="headerlink" title="延迟计算"></a>延迟计算</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 木易杨</span></span><br><span class="line"><span class="keyword">const</span> <span class="title function_">add</span> = (<span class="params">...args</span>) =&gt; args.<span class="title function_">reduce</span>(<span class="function">(<span class="params">a, b</span>) =&gt;</span> a + b);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 简化写法</span></span><br><span class="line"><span class="keyword">function</span> <span class="title function_">currying</span>(<span class="params">func</span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> args = [];</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">function</span> <span class="title function_">result</span>(<span class="params">...rest</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (rest.<span class="property">length</span> === <span class="number">0</span>) &#123;</span><br><span class="line">          <span class="keyword">return</span> <span class="title function_">func</span>(...args);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">          args.<span class="title function_">push</span>(...rest);</span><br><span class="line">        	<span class="keyword">return</span> result;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> sum = <span class="title function_">currying</span>(add);</span><br><span class="line"></span><br><span class="line"><span class="title function_">sum</span>(<span class="number">1</span>,<span class="number">2</span>)(<span class="number">3</span>); <span class="comment">// 未真正求值</span></span><br><span class="line"><span class="title function_">sum</span>(<span class="number">4</span>); 		 <span class="comment">// 未真正求值</span></span><br><span class="line"><span class="title function_">sum</span>(); 			 <span class="comment">// 输出 10</span></span><br></pre></td></tr></table></figure>
+<p>bind也可以实现延迟计算，就是MDN上面的bind的偏函数示例</p>
+<h2 id="动态创建函数"><a href="#动态创建函数" class="headerlink" title="动态创建函数"></a>动态创建函数</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> addEvent = (<span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="variable language_">window</span>.<span class="property">addEventListener</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="function">(<span class="params">elem, type, fn, capture</span>) =&gt;</span> &#123;</span><br><span class="line">            elem.<span class="title function_">addEventListener</span>(type, <span class="function">(<span class="params">e</span>) =&gt;</span> fn.<span class="title function_">call</span>(elem, e), capture);</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="function">(<span class="params">elem, type, fn, capture</span>) =&gt;</span> &#123;</span><br><span class="line">            elem.<span class="title function_">attachEvent</span>(<span class="string">&#x27;on&#x27;</span> + type, <span class="function">(<span class="params">e</span>) =&gt;</span> fn.<span class="title function_">call</span>(elem, e);</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)();</span><br></pre></td></tr></table></figure>
+<p>动态返回一个新的函数，不用每次都要if else判断</p>
+<h2 id="参数复用"><a href="#参数复用" class="headerlink" title="参数复用"></a>参数复用</h2><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">add</span>(<span class="params">a,b</span>)&#123;</span><br><span class="line">  <span class="keyword">return</span> a+b</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 如果我们就想让一个数加一，那么用上面的函数，就得每次都加上参数1，但是如果用柯里化，就像下面这样</span></span><br><span class="line"><span class="keyword">let</span> addOne = <span class="title function_">curry</span>(add, <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"><span class="title function_">addOne</span>(<span class="number">2</span>) <span class="comment">// 3</span></span><br><span class="line"><span class="title function_">addOne</span>(<span class="number">3</span>) <span class="comment">// 4</span></span><br><span class="line"><span class="comment">// 这样就能不必每次都写这个参数1了</span></span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/10/15/%E8%B7%9F%E7%9D%80lodash%E5%AD%A6%E8%8A%82%E6%B5%81/" rel="prev" title="跟着lodash学节流">
+      <i class="fa fa-chevron-left"></i> 跟着lodash学节流
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2023/10/15/%E6%9C%80%E9%95%BF%E5%9B%9E%E6%96%87%E5%AD%90%E4%B8%B2/" rel="next" title="最长回文子串">
+      最长回文子串 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E6%9F%AF%E9%87%8C%E5%8C%96"><span class="nav-number">1.</span> <span class="nav-text">什么是柯里化</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E6%96%B9%E5%BC%8F"><span class="nav-number">2.</span> <span class="nav-text">实现方式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BA%94%E7%94%A8"><span class="nav-number">3.</span> <span class="nav-text">应用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BB%B6%E8%BF%9F%E8%AE%A1%E7%AE%97"><span class="nav-number">3.1.</span> <span class="nav-text">延迟计算</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8A%A8%E6%80%81%E5%88%9B%E5%BB%BA%E5%87%BD%E6%95%B0"><span class="nav-number">3.2.</span> <span class="nav-text">动态创建函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E6%95%B0%E5%A4%8D%E7%94%A8"><span class="nav-number">3.3.</span> <span class="nav-text">参数复用</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">gu</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">18</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">gu</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>

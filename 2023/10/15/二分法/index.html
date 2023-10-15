@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"gulovelife.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="序先引用一个别人的笑话有一天阿东到图书馆借了 N 本书，出图书馆的时候，警报响了，于是保安把阿东拦下，要检查一下哪本书没有登记出借。阿东正准备把每一本书在报警器下过一下，以找出引发警报的书，但是保安露出不屑的眼神：你连二分查找都不会吗？于是保安把书分成两堆，让第一堆过一下报警器，报警器响；于是再把这堆书分成两堆…… 最终，检测了 logN 次之后，保安成功的找到了那本引起警报的书，露出了得意和嘲讽">
+<meta property="og:type" content="article">
+<meta property="og:title" content="二分法">
+<meta property="og:url" content="http://gulovelife.github.io/2023/10/15/%E4%BA%8C%E5%88%86%E6%B3%95/index.html">
+<meta property="og:site_name" content="glovelife">
+<meta property="og:description" content="序先引用一个别人的笑话有一天阿东到图书馆借了 N 本书，出图书馆的时候，警报响了，于是保安把阿东拦下，要检查一下哪本书没有登记出借。阿东正准备把每一本书在报警器下过一下，以找出引发警报的书，但是保安露出不屑的眼神：你连二分查找都不会吗？于是保安把书分成两堆，让第一堆过一下报警器，报警器响；于是再把这堆书分成两堆…… 最终，检测了 logN 次之后，保安成功的找到了那本引起警报的书，露出了得意和嘲讽">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-10-15T08:56:26.000Z">
+<meta property="article:modified_time" content="2023-10-15T09:26:40.894Z">
+<meta property="article:author" content="gu">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://gulovelife.github.io/2023/10/15/%E4%BA%8C%E5%88%86%E6%B3%95/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>二分法 | glovelife</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">glovelife</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="http://gulovelife.github.io/2023/10/15/%E4%BA%8C%E5%88%86%E6%B3%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="gu">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="glovelife">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          二分法
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2023-10-15 16:56:26 / Modified: 17:26:40" itemprop="dateCreated datePublished" datetime="2023-10-15T16:56:26+08:00">2023-10-15</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="序"><a href="#序" class="headerlink" title="序"></a>序</h2><p>先引用一个别人的笑话<br>有一天阿东到图书馆借了 N 本书，出图书馆的时候，警报响了，于是保安把阿东拦下，要检查一下哪本书没有登记出借。阿东正准备把每一本书在报警器下过一下，以找出引发警报的书，但是保安露出不屑的眼神：你连二分查找都不会吗？于是保安把书分成两堆，让第一堆过一下报警器，报警器响；于是再把这堆书分成两堆…… 最终，检测了 logN 次之后，保安成功的找到了那本引起警报的书，露出了得意和嘲讽的笑容。于是阿东背着剩下的书走了。<br>从此，图书馆丢了 N - 1 本书。  </p>
+<h2 id="二分法"><a href="#二分法" class="headerlink" title="二分法"></a>二分法</h2><p>上面的笑话简单讲了二分法的基本用法<br>在有序的数组中，查找一个特定的数，可以用到二分法，简单来说就是，取中间值，然后比较，然后再重新划分区域，然后再取中间值，然后再比较<br>但是这个简单的算法，细节非常重要，查找区间是否完整，查找区间如何调整，最终怎么取值，都是细节<br>二分法总得来说有三种应用场景，一是查找值，二是查左边界，三是查右边界。下面会一一讲解。  </p>
+<h2 id="查找值"><a href="#查找值" class="headerlink" title="查找值"></a>查找值</h2><p>这是最简单的，下面一段代码基本可以套用到所有的地方</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> left = <span class="number">0</span>, right = nums.<span class="property">length</span> - <span class="number">1</span></span><br><span class="line"><span class="keyword">while</span> (left &lt;= right) &#123;</span><br><span class="line">    <span class="keyword">const</span> middle = left + <span class="title class_">Math</span>.<span class="title function_">floor</span>((right - left) / <span class="number">2</span>)</span><br><span class="line">    <span class="keyword">if</span> (target === nums[middle]) &#123;</span><br><span class="line">        <span class="keyword">return</span> middle</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (target &lt; nums[middle]) &#123;</span><br><span class="line">        right = middle - <span class="number">1</span></span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (target &gt; nums[middle]) &#123;</span><br><span class="line">        left = middle + <span class="number">1</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">return</span> -<span class="number">1</span></span><br></pre></td></tr></table></figure>
+<p><code>left &lt;= right</code>是因为我们的查找区间是个闭区间，即从<code>0</code>到<code>length - 1</code>的这个区间，那么终止的条件就是<code>left &gt; right</code><br>这里有个比较坑的点，就是取middle的时候，需要用到<code>Math.floor()</code>来取整，不然<code>nums[middle]</code>和<code>target</code>比较没有结果，既不大于也不小于也不等于，然后就无法改变left和right的值，就在while里出不来了<br>由于是闭区间呢，所以每次区间调整的时候，为了不重复查找，右区间减一，左区间加一<br>return的值呢，如果有<code>target === nums[middle]</code>就返回middle，没有的话就返回-1。这是一个很基本的操作  </p>
+<h2 id="查找左边界"><a href="#查找左边界" class="headerlink" title="查找左边界"></a>查找左边界</h2><p>左区间和上面的基本类似，改几行代码就ok了</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> left = <span class="number">0</span>, right = nums.<span class="property">length</span> - <span class="number">1</span></span><br><span class="line"><span class="keyword">while</span> (left &lt;= right) &#123;</span><br><span class="line">    <span class="keyword">const</span> middle = left + <span class="title class_">Math</span>.<span class="title function_">floor</span>((right - left) / <span class="number">2</span>)</span><br><span class="line">    <span class="keyword">if</span> (target === nums[middle]) &#123;</span><br><span class="line">        right = middle - <span class="number">1</span></span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (target &lt; nums[middle]) &#123;</span><br><span class="line">        right = middle - <span class="number">1</span></span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (target &gt; nums[middle]) &#123;</span><br><span class="line">        left = middle + <span class="number">1</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> (left &gt; nums.<span class="property">length</span> || target !== nums[left])</span><br><span class="line">  <span class="keyword">return</span> -<span class="number">1</span></span><br><span class="line"><span class="keyword">return</span> left</span><br></pre></td></tr></table></figure>
+<p>修改的部分有两点。<br>一是当<code>target === nums[middle]</code>的时候，不是返回middle，而是收缩边界，由于是查找左边界，所以要将右边界收缩，排除右边的可能重复的部分，从而查找到左边界<br>为什么最总取的是left的值而不是right的值呢，因为终止条件是<code>right = left - 1</code>，而终止的前一个场景是<code>left = right = middle</code>，所以left会是最终的值。<br>但是也是要考虑到返回-1的情况的，若left下标所在的值不是我们想要的，那么就说明没有这值，返回-1。还有一种情况，如果target比所有的值都大，那么最终的情况left会大于数组的长度，因为right就是数组的长度，那么<code>nums[left]</code>就没有值，也需要返回-1  </p>
+<h2 id="查找右边界"><a href="#查找右边界" class="headerlink" title="查找右边界"></a>查找右边界</h2><p>和左边界类似，收缩边界的方向换了</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> left = <span class="number">0</span>, right = nums.<span class="property">length</span> - <span class="number">1</span></span><br><span class="line"><span class="keyword">while</span> (left &lt;= right) &#123;</span><br><span class="line">    <span class="keyword">const</span> middle = left + <span class="title class_">Math</span>.<span class="title function_">floor</span>((right - left) / <span class="number">2</span>)</span><br><span class="line">    <span class="keyword">if</span> (target === nums[middle]) &#123;</span><br><span class="line">        left = middle + <span class="number">1</span></span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (target &lt; nums[middle]) &#123;</span><br><span class="line">        right = middle - <span class="number">1</span></span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (target &gt; nums[middle]) &#123;</span><br><span class="line">        left = middle + <span class="number">1</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> (right &lt; <span class="number">0</span> || target !== nums[right])</span><br><span class="line">  <span class="keyword">return</span> -<span class="number">1</span></span><br><span class="line"><span class="keyword">return</span> right</span><br></pre></td></tr></table></figure>
+<p>这次是收缩左边界，然后判定返回值的方式，是如果right下标的值不对，那就返回-1，如果right小于0，就是说嘛target的值小于所有的数组中的值，说明没有目标值，返回-1 </p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>需要注意的点就是三个</p>
+<ol>
+<li>当前值和目标值相等的时候怎么处理</li>
+<li>返回值怎么处理</li>
+<li>搜索区间，取闭区间，也可以取左开右闭，但是个人觉得不太清晰</li>
+</ol>
+<h2 id="相关题目"><a href="#相关题目" class="headerlink" title="相关题目"></a>相关题目</h2><p>LeetCode<a target="_blank" rel="noopener" href="https://leetcode-cn.com/problems/find-first-and-last-position-of-element-in-sorted-array/">34.在排序数组中查找元素的第一个和最后一个位置</a><br>不完美题解：  </p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> searchRange = <span class="keyword">function</span> (<span class="params">nums, target</span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> <span class="title function_">leftBound</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">        <span class="keyword">let</span> left = <span class="number">0</span>, right = nums.<span class="property">length</span> - <span class="number">1</span></span><br><span class="line">        <span class="keyword">while</span> (left &lt;= right) &#123;</span><br><span class="line">            <span class="keyword">const</span> middle = left + (right - left) / <span class="number">2</span></span><br><span class="line">            <span class="keyword">if</span> (target === nums[middle]) &#123;</span><br><span class="line">                right = middle - <span class="number">1</span></span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (target &lt; nums[middle]) &#123;</span><br><span class="line">                right = middle - <span class="number">1</span></span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (target &gt; nums[middle]) &#123;</span><br><span class="line">                left = middle + <span class="number">1</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (left &gt; nums.<span class="property">length</span> || nums[left] !== target) <span class="keyword">return</span> -<span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> left</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">const</span> <span class="title function_">rightBound</span> = (<span class="params"></span>) =&gt; &#123;</span><br><span class="line">        <span class="keyword">let</span> left = <span class="number">0</span>, right = nums.<span class="property">length</span> - <span class="number">1</span></span><br><span class="line">        <span class="keyword">while</span> (left &lt;= right) &#123;</span><br><span class="line">            <span class="keyword">const</span> middle = left + <span class="title class_">Math</span>.<span class="title function_">floor</span>((right - left) / <span class="number">2</span>)</span><br><span class="line">            <span class="keyword">if</span> (target === nums[middle]) &#123;</span><br><span class="line">                left = middle + <span class="number">1</span></span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (target &lt; nums[middle]) &#123;</span><br><span class="line">                right = middle - <span class="number">1</span></span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (target &gt; nums[middle]) &#123;</span><br><span class="line">                left = middle + <span class="number">1</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (right &lt; <span class="number">0</span> || nums[right] !== target) <span class="keyword">return</span> -<span class="number">1</span></span><br><span class="line">        <span class="keyword">return</span> right</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> [<span class="title function_">leftBound</span>(), <span class="title function_">rightBound</span>()]</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/10/15/%E5%B9%B6%E6%9F%A5%E9%9B%86&Union-Find/" rel="prev" title="并查集&Union-Find">
+      <i class="fa fa-chevron-left"></i> 并查集&Union-Find
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2023/10/15/vue%E5%87%BD%E6%95%B0%E5%BC%8F%E7%BB%84%E4%BB%B6/" rel="next" title="vue函数式组件">
+      vue函数式组件 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BA%8F"><span class="nav-number">1.</span> <span class="nav-text">序</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E5%88%86%E6%B3%95"><span class="nav-number">2.</span> <span class="nav-text">二分法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9F%A5%E6%89%BE%E5%80%BC"><span class="nav-number">3.</span> <span class="nav-text">查找值</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9F%A5%E6%89%BE%E5%B7%A6%E8%BE%B9%E7%95%8C"><span class="nav-number">4.</span> <span class="nav-text">查找左边界</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9F%A5%E6%89%BE%E5%8F%B3%E8%BE%B9%E7%95%8C"><span class="nav-number">5.</span> <span class="nav-text">查找右边界</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">6.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%B8%E5%85%B3%E9%A2%98%E7%9B%AE"><span class="nav-number">7.</span> <span class="nav-text">相关题目</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">gu</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">18</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">tags</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">gu</span>
+</div>
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://muse.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Muse</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
